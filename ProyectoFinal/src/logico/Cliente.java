@@ -1,6 +1,6 @@
 package logico;
 
 public class Cliente {
-	private String nombre;
+	private int id;
 	private String direccion;
 }
