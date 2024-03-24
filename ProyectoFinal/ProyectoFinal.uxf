@@ -4,7 +4,7 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>558</x>
+      <x>576</x>
       <y>477</y>
       <w>189</w>
       <h>171</h>
@@ -21,7 +21,7 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>306</x>
+      <x>324</x>
       <y>243</y>
       <w>189</w>
       <h>171</h>
@@ -29,13 +29,19 @@
     <panel_attributes>Factura
 --
 - Componente[] componentes
-- Combo[] combos</panel_attributes>
+- Combo[] combos
+
+--
+
+precioTotal()
+
+</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>720</x>
+      <x>738</x>
       <y>225</y>
       <w>189</w>
       <h>171</h>
@@ -51,7 +57,7 @@ factura[]Factura
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>153</x>
+      <x>171</x>
       <y>729</y>
       <w>189</w>
       <h>171</h>
@@ -65,7 +71,7 @@ factura[]Factura
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>414</x>
+      <x>432</x>
       <y>729</y>
       <w>189</w>
       <h>171</h>
@@ -79,7 +85,7 @@ factura[]Factura
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>675</x>
+      <x>693</x>
       <y>729</y>
       <w>189</w>
       <h>171</h>
@@ -94,7 +100,7 @@ factura[]Factura
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>936</x>
+      <x>954</x>
       <y>729</y>
       <w>189</w>
       <h>171</h>
@@ -110,7 +116,7 @@ factura[]Factura
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>486</x>
+      <x>504</x>
       <y>360</y>
       <w>252</w>
       <h>36</h>
@@ -123,7 +129,7 @@ m2=0..*</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>261</x>
+      <x>279</x>
       <y>576</y>
       <w>315</w>
       <h>171</h>
@@ -134,7 +140,7 @@ m2=0..*</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>432</x>
+      <x>450</x>
       <y>405</y>
       <w>144</w>
       <h>117</h>
@@ -147,7 +153,7 @@ m2=0..*</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>468</x>
+      <x>486</x>
       <y>639</y>
       <w>144</w>
       <h>108</h>
@@ -158,7 +164,7 @@ m2=0..*</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>666</x>
+      <x>684</x>
       <y>639</y>
       <w>81</w>
       <h>108</h>
@@ -169,7 +175,7 @@ m2=0..*</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>738</x>
+      <x>756</x>
       <y>603</y>
       <w>234</w>
       <h>144</h>
@@ -180,7 +186,7 @@ m2=0..*</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>504</x>
+      <x>522</x>
       <y>0</y>
       <w>189</w>
       <h>171</h>
@@ -192,7 +198,7 @@ m2=0..*</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>351</x>
+      <x>369</x>
       <y>108</y>
       <w>171</w>
       <h>153</h>
@@ -205,7 +211,7 @@ m2=0..*</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>684</x>
+      <x>702</x>
       <y>99</y>
       <w>108</w>
       <h>144</h>
@@ -218,7 +224,7 @@ m2=0..*</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>612</x>
+      <x>630</x>
       <y>162</y>
       <w>54</w>
       <h>333</h>
@@ -231,7 +237,7 @@ m2=0..*</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>0</x>
+      <x>18</x>
       <y>459</y>
       <w>189</w>
       <h>171</h>
@@ -241,13 +247,16 @@ m2=0..*</panel_attributes>
 - id:String
 - precio:double
 - Componente[] componentes
+
+--
+precioOferta()
 </panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>180</x>
+      <x>198</x>
       <y>540</y>
       <w>396</w>
       <h>36</h>
@@ -260,7 +269,7 @@ m2=1..*</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>126</x>
+      <x>144</x>
       <y>315</y>
       <w>198</w>
       <h>162</h>
@@ -273,7 +282,7 @@ m2=0..*</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>45</x>
+      <x>63</x>
       <y>27</y>
       <w>477</w>
       <h>450</h>
