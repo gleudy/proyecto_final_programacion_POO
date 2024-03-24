@@ -14,6 +14,27 @@ public class Componente {
 		this.marca = marca;
 		this.modelo = modelo;
 	}
+
+	public String getNumeroSerie() {
+		return numeroSerie;
+	}
+
+	public double getPrecio() {
+		return precio;
+	}
+
+	public int getCantidadDispo() {
+		return cantidadDispo;
+	}
+
+	public String getMarca() {
+		return marca;
+	}
+
+	public String getModelo() {
+		return modelo;
+	}
+	
 	
 	
 }
