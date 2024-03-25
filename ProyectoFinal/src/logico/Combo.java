@@ -7,8 +7,9 @@ public class Combo {
 	private String prueba;
 	private double precio;
 	private ArrayList<Componente> componentes;
+	
+	
 	public Combo(String id, double precio) {
-		super();
 		this.id = id;
 		this.precio = precio;
 		componentes = new ArrayList<Componente>();

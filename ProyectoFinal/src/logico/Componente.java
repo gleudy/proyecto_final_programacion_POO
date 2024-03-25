@@ -5,14 +5,13 @@ public class Componente {
 	protected double precio;
 	protected int cantidadDispo;
 	protected String marca;
-	protected String modelo;
 	
-	public Componente(String numeroSerie, double precio, int cantidadDispo, String marca, String modelo) {
+	public Componente(String numeroSerie, double precio, int cantidadDispo, String marca) {
 		this.numeroSerie = numeroSerie;
 		this.precio = precio;
 		this.cantidadDispo = cantidadDispo;
 		this.marca = marca;
-		this.modelo = modelo;
+	
 	}
 
 	public String getNumeroSerie() {
@@ -31,10 +30,7 @@ public class Componente {
 		return marca;
 	}
 
-	public String getModelo() {
-		return modelo;
-	}
-	
+
 	
 	
 }
