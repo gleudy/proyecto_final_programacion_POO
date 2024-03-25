@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class Combo {
 	private String id;
+	private String prueba;
 	private double precio;
 	private ArrayList<Componente> componentes;
 	public Combo(String id, double precio) {
