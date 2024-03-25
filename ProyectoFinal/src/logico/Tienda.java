@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Tienda {
 	private static Tienda tienda;
-	private ArrayList<Componente> componentes;
+	static private ArrayList<Componente> componentes;
 	private ArrayList<Combo> combos;
 	private ArrayList<Cliente> clientes;
 	private ArrayList<Factura> facturas;
@@ -25,6 +25,12 @@ public class Tienda {
 		}
 		return tienda;
 	}
+	public static ArrayList<Componente> getComponentes() {
+		return componentes;
+	}
+
+	
+	
 	
 	
 

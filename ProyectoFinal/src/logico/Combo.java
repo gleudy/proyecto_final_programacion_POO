@@ -15,6 +15,24 @@ public class Combo {
 		componentes = new ArrayList<Componente>();
 	}
 	
+	public void agregarComponentes(Componente componente)
+	{
+		ArrayList<Componente> componentesTienda = Tienda.getComponentes();
+		
+		for(Componente comp: componentesTienda )
+		{
+			for(Componente compLocal:componentes )
+			{
+				if(!compLocal.getClass().equals(comp.getClass()))
+				{
+					componentes.add(comp);
+				}
+			}
+		}
+	
+		
+	}
+	
 	public String getId() {
 		return id;
 	}
