@@ -4,7 +4,7 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>576</x>
+      <x>558</x>
       <y>477</y>
       <w>189</w>
       <h>171</h>
@@ -15,13 +15,13 @@
 #precio: double
 #cantidadDispo:int
 #marca: String
-#modelo:String</panel_attributes>
+</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>324</x>
+      <x>306</x>
       <y>243</y>
       <w>189</w>
       <h>171</h>
@@ -41,7 +41,7 @@ precioTotal()
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>738</x>
+      <x>720</x>
       <y>225</y>
       <w>189</w>
       <h>171</h>
@@ -57,7 +57,7 @@ factura[]Factura
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>171</x>
+      <x>153</x>
       <y>729</y>
       <w>189</w>
       <h>171</h>
@@ -65,13 +65,14 @@ factura[]Factura
     <panel_attributes>Micro
 --
 - tipoConexion:Sting
-- velocidadProc:int</panel_attributes>
+- velocidadProc:int
+- modelo: String</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>432</x>
+      <x>414</x>
       <y>729</y>
       <w>189</w>
       <h>171</h>
@@ -85,7 +86,7 @@ factura[]Factura
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>693</x>
+      <x>675</x>
       <y>729</y>
       <w>189</w>
       <h>171</h>
@@ -94,13 +95,13 @@ factura[]Factura
 --
 - almacenamiento: int
 - tipoConexion: String
-</panel_attributes>
+- modelo: String</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>954</x>
+      <x>936</x>
       <y>729</y>
       <w>189</w>
       <h>171</h>
@@ -110,13 +111,13 @@ factura[]Factura
 - tipoConector: String
 - tipoRam: String
 - conexiones: String
-</panel_attributes>
+- modelo: String</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>504</x>
+      <x>486</x>
       <y>360</y>
       <w>252</w>
       <h>36</h>
@@ -129,7 +130,7 @@ m2=0..*</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>279</x>
+      <x>261</x>
       <y>576</y>
       <w>315</w>
       <h>171</h>
@@ -140,7 +141,7 @@ m2=0..*</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>450</x>
+      <x>432</x>
       <y>405</y>
       <w>144</w>
       <h>117</h>
@@ -153,7 +154,7 @@ m2=0..*</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>486</x>
+      <x>468</x>
       <y>639</y>
       <w>144</w>
       <h>108</h>
@@ -164,7 +165,7 @@ m2=0..*</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>684</x>
+      <x>666</x>
       <y>639</y>
       <w>81</w>
       <h>108</h>
@@ -175,7 +176,7 @@ m2=0..*</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>756</x>
+      <x>738</x>
       <y>603</y>
       <w>234</w>
       <h>144</h>
@@ -186,19 +187,23 @@ m2=0..*</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>522</x>
+      <x>504</x>
       <y>0</y>
       <w>189</w>
       <h>171</h>
     </coordinates>
     <panel_attributes>Tienda
---</panel_attributes>
+--
+- Combo [] combos
+- Factura [] facturas
+- Componente [] componentes
+- Cliente [] clientes</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>369</x>
+      <x>351</x>
       <y>108</y>
       <w>171</w>
       <h>153</h>
@@ -211,7 +216,7 @@ m2=0..*</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>702</x>
+      <x>684</x>
       <y>99</y>
       <w>108</w>
       <h>144</h>
@@ -224,7 +229,7 @@ m2=0..*</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>630</x>
+      <x>612</x>
       <y>162</y>
       <w>54</w>
       <h>333</h>
@@ -237,7 +242,7 @@ m2=0..*</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>18</x>
+      <x>0</x>
       <y>459</y>
       <w>189</w>
       <h>171</h>
@@ -256,7 +261,7 @@ precioOferta()
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>198</x>
+      <x>180</x>
       <y>540</y>
       <w>396</w>
       <h>36</h>
@@ -269,7 +274,7 @@ m2=1..*</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>144</x>
+      <x>126</x>
       <y>315</y>
       <w>198</w>
       <h>162</h>
@@ -282,7 +287,7 @@ m2=0..*</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>63</x>
+      <x>45</x>
       <y>27</y>
       <w>477</w>
       <h>450</h>
