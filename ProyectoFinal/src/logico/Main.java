@@ -10,7 +10,7 @@ public class Main {
 		ArrayList<Componente> componentes = new ArrayList();
 		ClaseArchivo archivo =  new ClaseArchivo();
 		Tienda t = null;
-		t.getInstance();
+		t = Tienda.getInstance();
 		
 		Componente disco = new Disco("001",12.6,10,"Kinstom","estandar",256,"Sata");
 		Componente micro = new Micro("001",12.6,10,"Kinstom","estandar","socket 7",2600);
