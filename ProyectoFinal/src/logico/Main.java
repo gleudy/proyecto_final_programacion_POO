@@ -22,6 +22,9 @@ public class Main {
 		t.agregarComponente(motherB);
 		t.agregarComponente(ram);
 		componentes=t.getComponentes();
+		
+		
+		
 		int a =0;
 		
 		

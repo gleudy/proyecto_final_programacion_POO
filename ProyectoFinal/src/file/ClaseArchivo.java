@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import logico.Cliente;
 import logico.Componente;
 import logico.Disco;
 import logico.Micro;
@@ -34,28 +35,7 @@ public class ClaseArchivo
 		crearArchivos();
 	}
 	
-	public boolean guardarComponete(ArrayList<Componente> comp)
-	{
-		if(directorio.exists() && componente.exists())
-		{
-			try {
-				FileWriter escribir = new FileWriter(componente);
-				for(Componente c: comp)
-				{
-					escribir.write(c.toString()+"\r\n");
-				}
-				escribir.close();
-				
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
-		return false;
 
-	}
-	
 	private boolean crearDirecctorio()
 	{
 		if(!directorio.exists())
@@ -95,6 +75,28 @@ public class ClaseArchivo
 		return false;
 	}
 
+	public boolean guardarComponete(ArrayList<Componente> comp)
+	{
+		if(directorio.exists() && componente.exists())
+		{
+			try {
+				FileWriter escribir = new FileWriter(componente);
+				for(Componente c: comp)
+				{
+					escribir.write(c.toString()+"\r\n");
+				}
+				escribir.close();
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return false;
+
+	}
+	
 	public ArrayList<Componente> obtenerComponentes()
 	{
 		ArrayList<Componente> componentes = new ArrayList();
@@ -142,5 +144,27 @@ public class ClaseArchivo
 		return componentes;
 	}
 
+	public boolean guardarCliente(ArrayList<Cliente> clientes)
+	{
+		if(directorio.exists() && cliente.exists())
+		{
+			try {
+				FileWriter escribir = new FileWriter(cliente);
+				for(Cliente c: clientes)
+				{
+					escribir.write(c.toString()+"\r\n");
+				}
+				escribir.close();
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return false;
+
+	}
+	
 }
 

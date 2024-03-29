@@ -6,7 +6,7 @@ import file.ClaseArchivo;
 
 public class Tienda {
 	private static Tienda tienda;
-	static private ArrayList<Componente> componentes;
+	private ArrayList<Componente> componentes;
 	private ArrayList<Combo> combos;
 	private ArrayList<Cliente> clientes;
 	private ArrayList<Factura> facturas;
@@ -28,18 +28,22 @@ public class Tienda {
 		}
 		return tienda;
 	}
-	public static ArrayList<Componente> getComponentes() {
+	public  ArrayList<Componente> getComponentes() {
 		componentes = cArchico.obtenerComponentes();
 		return componentes;
 		
 	}
 	
-	public static void agregarComponente(Componente comp)
+	public void agregarComponente(Componente comp)
 	{
 		componentes.add(comp);
 		cArchico.guardarComponete(componentes);
-		
-		
+	}
+	
+	public void agregarCliente(Cliente cliente)
+	{
+		clientes.add(cliente);
+		cArchico.guardarCliente(clientes);
 	}
 
 	
