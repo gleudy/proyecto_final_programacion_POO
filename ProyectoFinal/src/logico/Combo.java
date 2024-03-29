@@ -6,6 +6,7 @@ public class Combo {
 	private String id;
 	private String prueba;
 	private double precio;
+	Tienda tienda = null;
 	private ArrayList<Componente> componentes;
 	
 	
@@ -17,7 +18,7 @@ public class Combo {
 	
 	public void agregarComponentes(Componente componente)
 	{
-		ArrayList<Componente> componentesTienda = Tienda.getComponentes();
+		ArrayList<Componente> componentesTienda = tienda.getComponentes();
 		
 		for(Componente comp: componentesTienda )
 		{
