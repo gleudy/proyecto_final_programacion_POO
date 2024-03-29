@@ -21,4 +21,11 @@ public class Micro extends Componente {
 		return velocidadProc;
 	}
 	
+	@Override
+	public String toString() {
+		
+		return this.getClass().getSimpleName()+"," + super.toString()+","+ this.modelo+ "," +this.tipoConexion+","+this.velocidadProc;
+	}
+	
+	
 }

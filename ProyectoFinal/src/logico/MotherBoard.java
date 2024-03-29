@@ -23,4 +23,11 @@ public class MotherBoard extends Componente {
 		return conexiones;
 	}
 	
+	@Override
+	public String toString() {
+		
+		return this.getClass().getSimpleName()+"," + super.toString()+","+ this.modelo+ "," +this.tipoConector+","+this.tipoRam+","+this.conexiones;
+	}
+	
+	
 }

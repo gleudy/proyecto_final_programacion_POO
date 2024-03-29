@@ -30,6 +30,11 @@ public class Componente {
 		return marca;
 	}
 
+	@Override
+	public String toString() {
+		return numeroSerie + ","+ precio + ","+cantidadDispo + "," + marca;
+	}
+
 
 	
 	

@@ -18,6 +18,13 @@ public class Disco extends Componente {
 	public String getTipoConexion() {
 		return tipoConexion;
 	}
+	@Override
+	public String toString() {
+		
+		return this.getClass().getSimpleName()+"," + super.toString()+","+ this.modelo+ "," +this.almacenamiento+","+this.tipoConexion;
+	}
+	
+	
 	
 	
 }

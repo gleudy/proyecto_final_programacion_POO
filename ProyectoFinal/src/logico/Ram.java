@@ -16,4 +16,10 @@ public class Ram extends Componente {
 		return tipoMemoria;
 	}
 	
+	public String toString() {
+		
+		return this.getClass().getSimpleName()+"," + super.toString()+","+this.capacidad+","+this.tipoMemoria;
+	}
+	
+	
 }
