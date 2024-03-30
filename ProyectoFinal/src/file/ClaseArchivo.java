@@ -166,5 +166,38 @@ public class ClaseArchivo
 
 	}
 	
+	public ArrayList<Cliente> obtenerClientes()
+	{
+		ArrayList<Cliente> clientes = new ArrayList();
+		String cadena ="";
+		try {
+			lector = new FileReader(cliente);
+			lectura = new BufferedReader(lector);
+			Cliente cliente;
+		
+				cadena = lectura.readLine();
+				while(cadena!=null)
+				{
+					String[] lista = cadena.split(",");
+					cliente = new Cliente(Integer.parseInt(lista[0]),lista[1]);
+					clientes.add(cliente);
+					cadena = lectura.readLine();
+					
+				}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		 catch (IOException e) {
+				// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return clientes;
+		
+	}
+
+	
+
 }
 

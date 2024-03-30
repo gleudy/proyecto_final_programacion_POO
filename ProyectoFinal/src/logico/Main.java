@@ -8,6 +8,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		ArrayList<Componente> componentes = new ArrayList();
+		ArrayList<Cliente> clientes = new ArrayList();
 		ClaseArchivo archivo =  new ClaseArchivo();
 		Tienda t = null;
 		t = Tienda.getInstance();
@@ -23,7 +24,13 @@ public class Main {
 		t.agregarComponente(ram);
 		componentes=t.getComponentes();
 		
+		Cliente c1 = new Cliente(001,"Su casa");
+		Cliente c2 = new Cliente(002,"Su casa");
 		
+		t.agregarCliente(c1);
+		t.agregarCliente(c2);
+		
+		clientes = t.getClientes();
 		
 		int a =0;
 		

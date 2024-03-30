@@ -46,6 +46,11 @@ public class Tienda {
 		cArchico.guardarCliente(clientes);
 	}
 
+	public  ArrayList<Cliente> getClientes() {
+		clientes = cArchico.obtenerClientes();
+		return clientes;
+		
+	}
 	
 	
 	
