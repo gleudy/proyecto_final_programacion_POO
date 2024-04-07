@@ -25,6 +25,11 @@ public class Tienda {
 		facturas = new ArrayList<>();	
 		empleados = new ArrayList<>();	
 		this.guardar = Guardar.getInstance();
+		this.getComponentes();
+		this.getClientes();
+		this.getEmpleados();
+		this.getFacturas();
+		this.getCombo();
 	}
 	public static Tienda getInstance() {
 
@@ -36,6 +41,7 @@ public class Tienda {
 	}
 	
 	public  ArrayList<Componente> getComponentes() {
+		try {
 		this.componentes.clear();
 		this.listaObjetos = new ArrayList<>();
 		this.listaObjetos = guardar.recuperarObjetos(this.guardar.getComponente());
@@ -43,12 +49,16 @@ public class Tienda {
 			Componente componente = (Componente) objeto;
 		    this.componentes.add(componente);
 		}
-		
+		} catch(Exception ex)
+		{
+			
+		}
 		return componentes;
 		
 	}
 	
 	public  ArrayList<Empleado> getEmpleados() {
+		try {
 		this.empleados.clear();
 		this.listaObjetos = new ArrayList<>();
 		this.listaObjetos = guardar.recuperarObjetos(this.guardar.getEmpleado());
@@ -56,12 +66,16 @@ public class Tienda {
 			Empleado empleado = (Empleado) objeto;
 		    this.empleados.add(empleado);
 		}
-		
+		}catch(Exception ex)
+		{
+			
+		}
 		return empleados;
 		
 	}
 	
 	public  ArrayList<Cliente> getClientes() {
+		try {
 		clientes.clear();
 		this.listaObjetos = new ArrayList<>();
 		this.listaObjetos = guardar.recuperarObjetos(this.guardar.getCliente());
@@ -69,12 +83,16 @@ public class Tienda {
 		    Cliente cliente = (Cliente) objeto;
 		    this.clientes.add(cliente);
 		}
-		
+		}catch(Exception ex)
+		{
+			
+		}
 		return clientes;
 		
 	}
 	
 	public  ArrayList<Combo> getCombo() {
+		try {
 		this.facturas.clear();
 		this.listaObjetos = new ArrayList<>();
 		this.listaObjetos = guardar.recuperarObjetos(this.guardar.getCombo());
@@ -82,12 +100,16 @@ public class Tienda {
 		    Combo combo = (Combo) objeto;
 		    this.combos.add(combo);
 		}
-		
+		}catch(Exception ex)
+		{
+			
+		}
 		return combos;
 		
 	}
 	
 	public  ArrayList<Combo> getFacturas() {
+		try {
 		this.facturas.clear();
 		this.listaObjetos = new ArrayList<>();
 		this.listaObjetos = guardar.recuperarObjetos(this.guardar.getFactura());
@@ -95,7 +117,10 @@ public class Tienda {
 		    Factura fac = (Factura) objeto;
 		    this.facturas.add(fac);
 		}
-		
+		}catch(Exception ex)
+		{
+			
+		}
 		return combos;
 		
 	}
@@ -150,7 +175,6 @@ public class Tienda {
 		{
 			try {
 				Combo cb = new Combo(id);
-				this.agregarCombo(cb);
 				for(Componente comp: componentes)
 				{
 					cb.agregarComponete(comp);
