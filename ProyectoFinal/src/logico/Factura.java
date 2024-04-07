@@ -1,10 +1,16 @@
 package logico;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Factura {
+public class Factura implements Serializable {
+	/**
+	 * 
+	 */
+	private static int contadorId =100;
+	private static final long serialVersionUID = 1L;
 	private String idFactura;
 	private String idCliente;
 	private LocalDate fecha;
@@ -13,37 +19,43 @@ public class Factura {
 	private double total;
 	private ArrayList<Componente> componentes;
 	private ArrayList<Combo>combos;
-	public Factura() {
 
-	}
-
-	private Factura(String idFactura, String idCliente) {
+	public Factura(String idCliente, String idEmpleado) {
 		componentes = new ArrayList<Componente>();
 		combos = new ArrayList<Combo>();
-		this.idFactura = idFactura;
+		this.idFactura = crearID();
 		this.idCliente = idCliente;
 		this.fecha = LocalDate.now();
-		this.subTotal = calcularSubTotal();
-		this.itbis = calcularItbis();
-		this.subTotal = calcularTotal();
+		calcularSubTotal();
+		calcularItbis();
+		calcularTotal();
 		
 		
+	}
+	private String crearID()
+	{
+		String id = "f-"+contadorId;
+		this.idFactura = "f-"+contadorId;
+		contadorId++;
+		return id;
 	}
 
 	public void agregarComponente(Componente componente) {
 		componentes.add(componente);
+		this.calcularTotal();
 	}
 	
 	public void agregarCombo(Combo combo) {
 		combos.add(combo);
+		this.calcularTotal();
 	
 	}
 	
-	public double calcularSubTotal()
+	public void calcularSubTotal()
 	{
 		double totalPrecioComponentes =0;
 		double totalPrecioCombos=0;
-		double itbis=0;
+	
 		
 		for(Componente comp: componentes)
 		{
@@ -55,24 +67,24 @@ public class Factura {
 			totalPrecioCombos+= comb.getPrecio();
 		}
 		
-		itbis = (totalPrecioComponentes + totalPrecioCombos);
+		this.subTotal = (totalPrecioComponentes + totalPrecioCombos);
 		
 		
-		return itbis;
+		
 	}
 	
-	public double calcularItbis()
+	public void calcularItbis()
 	{
-		double itbis = calcularSubTotal()*0.18;
-		return itbis;
+		this.calcularSubTotal();
+		this.itbis =  this.subTotal*0.18;
+		
 
 	}
 	
-	public double calcularTotal()
+	public void calcularTotal()
 	{
-		double subTotal = calcularSubTotal();
-		double itbis = calcularSubTotal()*0.18;
-		return subTotal+itbis;
+		this.calcularItbis();
+		this.total = subTotal+itbis;
 
 	}
 	

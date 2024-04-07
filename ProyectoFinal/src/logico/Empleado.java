@@ -1,23 +1,30 @@
 package logico;
 
+import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 
-public class Empleado extends Persona{
-	Date fechaIngreso;
-	String cargo;
-	double sueldo;
-	public Empleado(String cedula, String nombre, String direccion, String telefono, Date fechaIngreso, String cargo, double sueldo) {
+public class Empleado extends Persona implements Serializable{
+	/**
+	 * 
+	 */
+
+	private static final long serialVersionUID = 1L;
+	private LocalDate fechaIngreso;
+	private String cargo;
+	private double sueldo;
+	public Empleado(String cedula, String nombre, String direccion, String telefono, LocalDate fechaIngreso, String cargo, double sueldo) {
 		super(cedula, nombre, direccion, telefono);
 		this.cargo = cargo;
 		this.fechaIngreso =fechaIngreso;
 		this.sueldo = sueldo;
 	}
-	public Date getFechaIngreso() {
+	
+	
+	public LocalDate getFechaIngreso() {
 		return fechaIngreso;
 	}
-	public void setFechaIngreso(Date fechaIngreso) {
-		this.fechaIngreso = fechaIngreso;
-	}
+
 	public String getCargo() {
 		return cargo;
 	}

@@ -37,6 +37,10 @@ public class Guardar
 		directorio = new File(rutaDirectorio);
 		crearDirecctorio();
 		nombreArchivoComponete = "componentes.bin";
+		nombreArchivoFactura = "facturas.bin";
+		nombreArchivoCliente= "clientes.bin";
+		nombreArchivoCombo= "combos.bin";
+		nombreArchivoEmpleado= "empleados.bin";
 		crearArchivos();
 		
 	}
@@ -71,9 +75,17 @@ public class Guardar
 	private boolean crearArchivos()
 	{
 		componente = new File(rutaDirectorio+File.separator + nombreArchivoComponete);
+		cliente = new File(rutaDirectorio+File.separator + nombreArchivoCliente);
+		combo = new File(rutaDirectorio+File.separator + nombreArchivoCombo);
+		factura = new File(rutaDirectorio+File.separator + nombreArchivoFactura);
+		empleado = new File(rutaDirectorio+File.separator + nombreArchivoEmpleado);
 
 		try {
 			componente.createNewFile();
+			cliente.createNewFile();
+			combo.createNewFile();
+			factura.createNewFile();
+			empleado.createNewFile();
 			return true;
 	
 
@@ -84,14 +96,14 @@ public class Guardar
 		return false;
 	}
     
-	public void guardarComponentes(ArrayList<Componente> componentes)
+	public void guardarObjetos(ArrayList<Object> objects,File nameFile)
     {
         try {
-            FileOutputStream is = new FileOutputStream(componente);
+            FileOutputStream is = new FileOutputStream(nameFile);
             ObjectOutputStream ois = new ObjectOutputStream(is);
-            for(Componente comp: componentes)
+            for(Object obj: objects)
             {
-                ois.writeObject(comp);
+                ois.writeObject(obj);
             }
             ois.close();
         } catch (FileNotFoundException e) {
@@ -101,27 +113,27 @@ public class Guardar
         }
     }
 
-	public void guardarComponentes1(Componente comp)
-    {
-        try {
-            FileOutputStream is = new FileOutputStream(componente);
-            ObjectOutputStream ois = new ObjectOutputStream(is);
-            ois.writeObject(comp);
-            ois.close();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-	
-	public Componente recuperarComponentes() throws FileNotFoundException
+	public ArrayList<Object> recuperarObjetos(File name)
 	{
-		Componente comp = null;
+		Object obj=null;
+		ArrayList<Object> objects = new ArrayList<>() ;
         try {
-        	FileInputStream is = new FileInputStream(componente);
+        	FileInputStream is = new FileInputStream(name);
 			ObjectInputStream ois = new ObjectInputStream(is);
-			comp = (Componente) ois.readObject();
+			obj = ois.readObject();
+			 while (obj!=null)
+	            {
+				 objects.add(obj);
+	                try {
+	                	obj = ois.readObject();
+	                } catch (Exception ex)
+	                {
+	                	obj = null;
+
+	                }
+
+	            }
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			return null;
@@ -131,6 +143,39 @@ public class Guardar
 			return null;
 		}
 		
-        return comp;
+        return objects;
 	}
+
+	
+	public File getDirectorio() {
+		return directorio;
+	}
+
+	public File getComponente() {
+		return componente;
+	}
+
+	public File getCliente() {
+		return cliente;
+	}
+
+	public File getCombo() {
+		return combo;
+	}
+
+	public File getFactura() {
+		return factura;
+	}
+
+	public File getEmpleado() {
+		return empleado;
+	}
+
+	public static Guardar getGuardar() {
+		return guardar;
+	}
+
+
+
+
 }
