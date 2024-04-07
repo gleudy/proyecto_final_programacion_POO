@@ -8,7 +8,7 @@ public class Tienda {
 	private static Tienda tienda;
 	private ArrayList<Componente> componentes;
 	private ArrayList<Combo> combos;
-	private ArrayList<Cliente> clientes;
+	private ArrayList<Persona> clientes;
 	private ArrayList<Factura> facturas;
 	private static ClaseArchivo cArchico= new ClaseArchivo();
 	
@@ -29,7 +29,7 @@ public class Tienda {
 		return tienda;
 	}
 	public  ArrayList<Componente> getComponentes() {
-		componentes = cArchico.obtenerComponentes();
+		//componentes = cArchico.obtenerComponentes();
 		return componentes;
 		
 	}
@@ -37,17 +37,17 @@ public class Tienda {
 	public void agregarComponente(Componente comp)
 	{
 		componentes.add(comp);
-		cArchico.guardarComponete(componentes);
+		//cArchico.guardarComponete(componentes);
 	}
 	
-	public void agregarCliente(Cliente cliente)
+	public void agregarCliente(Persona cliente)
 	{
 		clientes.add(cliente);
-		cArchico.guardarCliente(clientes);
+		//cArchico.guardarCliente(clientes);
 	}
 
-	public  ArrayList<Cliente> getClientes() {
-		clientes = cArchico.obtenerClientes();
+	public  ArrayList<Persona> getClientes() {
+		//clientes = cArchico.obtenerClientes();
 		return clientes;
 		
 	}
