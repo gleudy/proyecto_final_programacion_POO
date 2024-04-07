@@ -8,7 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import logico.Cliente;
+import logico.Persona;
 import logico.Componente;
 import logico.Disco;
 import logico.Micro;
@@ -38,6 +38,7 @@ public class ClaseArchivo
 
 	private boolean crearDirecctorio()
 	{
+		System.out.println(directorio.exists());
 		if(!directorio.exists())
 		{
 			if(directorio.mkdir())
@@ -144,13 +145,13 @@ public class ClaseArchivo
 		return componentes;
 	}
 
-	public boolean guardarCliente(ArrayList<Cliente> clientes)
+	public boolean guardarCliente(ArrayList<Persona> clientes)
 	{
 		if(directorio.exists() && cliente.exists())
 		{
 			try {
 				FileWriter escribir = new FileWriter(cliente);
-				for(Cliente c: clientes)
+				for(Persona c: clientes)
 				{
 					escribir.write(c.toString()+"\r\n");
 				}
@@ -165,21 +166,21 @@ public class ClaseArchivo
 		return false;
 
 	}
-	
-	public ArrayList<Cliente> obtenerClientes()
-	{
-		ArrayList<Cliente> clientes = new ArrayList();
+	/*
+	public ArrayList<Persona> obtenerClientes()
+	{ 
+		ArrayList<Persona> clientes = new ArrayList();
 		String cadena ="";
 		try {
 			lector = new FileReader(cliente);
 			lectura = new BufferedReader(lector);
-			Cliente cliente;
+			Persona cliente;
 		
 				cadena = lectura.readLine();
 				while(cadena!=null)
 				{
 					String[] lista = cadena.split(",");
-					cliente = new Cliente(Integer.parseInt(lista[0]),lista[1]);
+					cliente = new Persona(Integer.parseInt(lista[0]),lista[1]);
 					clientes.add(cliente);
 					cadena = lectura.readLine();
 					
@@ -197,7 +198,7 @@ public class ClaseArchivo
 		
 	}
 
+	*/
 	
-
 }
 

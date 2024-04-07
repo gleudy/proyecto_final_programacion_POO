@@ -4,35 +4,34 @@ import java.util.ArrayList;
 
 public class Combo {
 	private String id;
-	private String prueba;
 	private double precio;
-	Tienda tienda = null;
 	private ArrayList<Componente> componentes;
 	
 	
-	public Combo(String id, double precio) {
+	public Combo(String id) {
 		this.id = id;
-		this.precio = precio;
 		componentes = new ArrayList<Componente>();
+		this.precio = 0;
 	}
 	
-	public void agregarComponentes(Componente componente)
+	public int agregarComponete(Componente comp)
 	{
-		ArrayList<Componente> componentesTienda = tienda.getComponentes();
-		
-		for(Componente comp: componentesTienda )
-		{
-			for(Componente compLocal:componentes )
-			{
-				if(!compLocal.getClass().equals(comp.getClass()))
-				{
-					componentes.add(comp);
-				}
-			}
-		}
-	
+		componentes.add(comp);
+		calcularPrecio();
+		return componentes.size();
 		
 	}
+	
+	private void calcularPrecio()
+	{
+		double precioTotal =0;
+		for(Componente comp: componentes)
+		{
+			precioTotal+= comp.precioUnitario;
+		}
+		precio = precioTotal - precioTotal*0.3;
+	}
+	
 	
 	public String getId() {
 		return id;

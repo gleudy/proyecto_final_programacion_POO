@@ -1,4 +1,0 @@
-Disco,001,12.6,10,Kinstom,estandar,256,Sata
-Micro,001,12.6,10,Kinstom,estandar,socket 7,2600
-MotherBoard,001,12.6,10,Kinstom,estandar,estandar,estadar,estadar
-Ram,001,12.6,10,Kinstom,8,ddr3

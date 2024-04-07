@@ -1,14 +1,20 @@
 package logico;
 
-public class Componente {
+import java.io.Serializable;
+
+public class Componente implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	protected String numeroSerie;
-	protected double precio;
+	protected double precioUnitario;
 	protected int cantidadDispo;
 	protected String marca;
 	
 	public Componente(String numeroSerie, double precio, int cantidadDispo, String marca) {
 		this.numeroSerie = numeroSerie;
-		this.precio = precio;
+		this.precioUnitario = precio;
 		this.cantidadDispo = cantidadDispo;
 		this.marca = marca;
 	
@@ -19,7 +25,7 @@ public class Componente {
 	}
 
 	public double getPrecio() {
-		return precio;
+		return precioUnitario;
 	}
 
 	public int getCantidadDispo() {
@@ -32,7 +38,7 @@ public class Componente {
 
 	@Override
 	public String toString() {
-		return numeroSerie + ","+ precio + ","+cantidadDispo + "," + marca;
+		return numeroSerie + ","+ precioUnitario + ","+cantidadDispo + "," + marca;
 	}
 
 
