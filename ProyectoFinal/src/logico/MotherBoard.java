@@ -28,6 +28,8 @@ public class MotherBoard extends Componente {
 		
 		return this.getClass().getSimpleName()+"," + super.toString()+","+ this.modelo+ "," +this.tipoConector+","+this.tipoRam+","+this.conexiones;
 	}
+	public String getModelo() {
+		// TODO Auto-generated method stub
+		return modelo;
+	}}
 	
-	
-}

@@ -12,6 +12,8 @@ import javax.swing.border.LineBorder;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JTextField;
+import javax.swing.JTable;
+import javax.swing.JScrollBar;
 
 public class CrearDisco extends JDialog {
 
@@ -24,6 +26,8 @@ public class CrearDisco extends JDialog {
 	private JTextField txtAlmacenamiento;
 	private JTextField txtTipoConexion;
 	private JTextField txtModelo;
+	private JTable tblProductos;
+	
 
 	/**
 	 * Launch the application.
@@ -42,7 +46,7 @@ public class CrearDisco extends JDialog {
 	 * Create the dialog.
 	 */
 	public CrearDisco() {
-		setBounds(100, 100, 577, 377);
+		setBounds(100, 100, 600, 622);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(new Color(255, 255, 255));
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -158,6 +162,19 @@ public class CrearDisco extends JDialog {
 		lblCrearDiscoDuro.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 16));
 		lblCrearDiscoDuro.setBounds(206, 0, 172, 30);
 		contentPanel.add(lblCrearDiscoDuro);
+		
+		JPanel panel = new JPanel();
+		panel.setBounds(33, 302, 498, 212);
+		contentPanel.add(panel);
+		panel.setLayout(null);
+		
+		JScrollBar scrollBar = new JScrollBar();
+		scrollBar.setBounds(481, 11, 17, 201);
+		panel.add(scrollBar);
+		
+		tblProductos = new JTable();
+		tblProductos.setBounds(10, 11, 465, 190);
+		panel.add(tblProductos);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));

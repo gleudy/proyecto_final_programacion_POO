@@ -53,7 +53,7 @@ public class CrearRam extends JDialog {
 			JPanel panel = new JPanel();
 			panel.setBackground(new Color(255, 255, 255));
 			panel.setBorder(new LineBorder(new Color(0, 128, 192)));
-			panel.setBounds(30, 40, 528, 213);
+			panel.setBounds(30, 36, 528, 217);
 			contentPanel.add(panel);
 			panel.setLayout(null);
 			

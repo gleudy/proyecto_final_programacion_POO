@@ -23,6 +23,10 @@ public class Disco extends Componente {
 		
 		return this.getClass().getSimpleName()+"," + super.toString()+","+ this.modelo+ "," +this.almacenamiento+","+this.tipoConexion;
 	}
+	public String getModelo() {
+		// TODO Auto-generated method stub
+		return modelo;
+	}
 	
 	
 	

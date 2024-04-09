@@ -26,6 +26,11 @@ public class Micro extends Componente {
 		
 		return this.getClass().getSimpleName()+"," + super.toString()+","+ this.modelo+ "," +this.tipoConexion+","+this.velocidadProc;
 	}
+
+	public String getModelo() {
+		
+		return modelo;
+	}
 	
 	
 }

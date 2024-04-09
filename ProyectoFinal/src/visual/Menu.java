@@ -25,7 +25,9 @@ public class Menu extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-
+	
+	private String nombreUsuario = Login.usuario;
+	public boolean Rol = true;
 	/**
 	 * Launch the application.
 	 */
@@ -57,7 +59,11 @@ public class Menu extends JFrame {
 		contentPane.setLayout(null);
 		Login l = new Login();
 		
-		
+		if(nombreUsuario.equalsIgnoreCase("Trabajador")) {
+			Rol = false;
+		}else {
+			Rol = true;
+		}
 		
 		
 		JPanel panel = new JPanel();
@@ -267,6 +273,7 @@ public class Menu extends JFrame {
 		mnNewMenu_4.setForeground(new Color(0, 0, 0));
 		mnNewMenu_4.setFont(new Font("Segoe UI", Font.BOLD, 12));
 		menuBar.add(mnNewMenu_4);
+		mnNewMenu_4.setEnabled(Rol);
 		
 		JMenuItem mntmNewMenuItem_1 = new JMenuItem("Crear cliente");
 		mntmNewMenuItem_1.addActionListener(new ActionListener() {
@@ -283,6 +290,7 @@ public class Menu extends JFrame {
 		mnNewMenu_2.setForeground(new Color(0, 0, 0));
 		mnNewMenu_2.setFont(new Font("Segoe UI", Font.BOLD, 12));
 		menuBar.add(mnNewMenu_2);
+		
 		
 		JMenuItem mntmNewMenuItem_2 = new JMenuItem("Crear Microprocesador");
 		mntmNewMenuItem_2.addActionListener(new ActionListener() {
@@ -337,8 +345,10 @@ public class Menu extends JFrame {
 		mnNewMenu_2.add(mntmNewMenuItem_5);
 		
 		JMenuItem mntmNewMenuItem_6 = new JMenuItem("Crear Combo");
+		mntmNewMenuItem_6.setEnabled(Rol);
 		mntmNewMenuItem_6.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
 				CrearCombo cc = new CrearCombo();
 				cc.setLocationRelativeTo(null);
 				cc.setModal(true);
@@ -351,6 +361,7 @@ public class Menu extends JFrame {
 		mnNewMenu_3.setForeground(new Color(0, 0, 0));
 		mnNewMenu_3.setFont(new Font("Segoe UI", Font.BOLD, 12));
 		menuBar.add(mnNewMenu_3);
+		mnNewMenu_3.setEnabled(Rol);
 		
 		JPanel panel_3 = new JPanel();
 		panel_3.setBackground(new Color(255, 255, 255));

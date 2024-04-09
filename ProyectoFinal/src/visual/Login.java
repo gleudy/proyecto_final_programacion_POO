@@ -26,7 +26,8 @@ public class Login extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtUsuario;
 	private JTextField txtContrasena;
-	private String usuario;
+	public static String usuario;
+	
 
   
 
@@ -104,16 +105,23 @@ public class Login extends JDialog {
 						
 						JOptionPane.showMessageDialog(null, "Inicio de sesion completado, Bienvenido: " + txtUsuario.getText(), "Aviso", JOptionPane.INFORMATION_MESSAGE);
 						
-						Menu m = new Menu();
+						Home m = new Home();
 						m.dispose();
 						m.setVisible(true);
 						m.setLocationRelativeTo(null);
 						
 						dispose();
+					}else if(txtUsuario.getText().equalsIgnoreCase("Trabajador") && txtContrasena.getText().equals("1234")) {
+						usuario = txtUsuario.getText();
+						JOptionPane.showMessageDialog(null, "Inicio de sesion completado, Bienvenido: " + txtUsuario.getText(), "Aviso", JOptionPane.INFORMATION_MESSAGE);
 						
+						Home m = new Home();
+						m.dispose();
+						m.setVisible(true);
+						m.setLocationRelativeTo(null);
 						
-					}
-					else {
+						dispose();
+				}else {
 						JOptionPane.showMessageDialog(null, "Usuario o contrasena incorrectos. ","Error", JOptionPane.ERROR_MESSAGE);
 					}
 				}
