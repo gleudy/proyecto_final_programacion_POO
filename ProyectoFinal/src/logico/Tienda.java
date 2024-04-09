@@ -165,7 +165,7 @@ public class Tienda {
 	}
 
 	
-	public boolean crearCombo(String id, ArrayList<Componente> componentes)
+	public boolean crearCombo(ArrayList<Componente> componentes)
 	{
 		if(componentes.size()<3)
 		{
@@ -174,12 +174,13 @@ public class Tienda {
 		else
 		{
 			try {
-				Combo cb = new Combo(id);
+				Combo cb = new Combo();
 				for(Componente comp: componentes)
 				{
 					cb.agregarComponete(comp);
 				}
 				this.agregarCombo(cb);
+				
 				return true;
 				}catch(Exception ex)
 				{
@@ -188,6 +189,194 @@ public class Tienda {
 		}
 	}
 	
+	public boolean crearCliente(String cedula, String nombre, String direccion, String telefono, String tipoCliente)
+	{
+		if(validarSiClienteExiste(cedula)) 
+		{
+			return false;
+		}
+		else
+		{
+			if(validarCedula(cedula))
+			{
+				Cliente cl = new Cliente(cedula,nombre,direccion,telefono,tipoCliente);
+				agregarCliente(cl);
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public boolean crearEmpleado(String cedula, String nombre, String direccion, String telefono, LocalDate fechaIngreso, String cargo, double sueldo)
+	{
+		if(validarSiEmpleadoExiste(cedula)) 
+		{
+			return false;
+		}
+		else
+		{
+			if(validarCedula(cedula))
+			{
+				Empleado emp = new Empleado(cedula,nombre,direccion,telefono,fechaIngreso,cargo,sueldo);
+				agregarEmpleado(emp);
+				return true;
+			}
+		}
+		
+		return false;
+		
+		
+	}
+
+	public boolean crearDisco(String numeroSerie, double precio, int cantidadDispo, String marca, String modelo, int almacenamiento,
+			String tipoConexion)
+	{
+		if(validarSiComponeteExiste(numeroSerie))
+		{
+			return false;
+		}
+		else
+		{
+			this.agregarComponente(new Disco(numeroSerie, precio, cantidadDispo,  marca,  modelo, almacenamiento, tipoConexion));
+			return true;
+		}
+
+	}
+	
+	public boolean crearMicro(String numeroSerie, double precio, int cantidadDispo, String marca, String modelo, String tipoConexion,
+			int velocidadProcn)
+	{
+		if(validarSiComponeteExiste(numeroSerie))
+		{
+			return false;
+		}
+		else
+		{
+			this.agregarComponente(new Micro(numeroSerie, precio, cantidadDispo,  marca,  modelo, tipoConexion, velocidadProcn));
+			return true;
+		}
+
+	}
+
+	public boolean crearMotherBoard(String numeroSerie, double precio, int cantidadDispo, String marca, String modelo,
+			String tipoConector, String tipoRam, String conexiones)
+	{
+		if(validarSiComponeteExiste(numeroSerie))
+		{
+			return false;
+		}
+		else
+		{
+			this.agregarComponente(new MotherBoard(numeroSerie, precio, cantidadDispo, marca, modelo,
+					tipoConector, tipoRam, conexiones));
+			return true;
+		}
+
+	}
+
+	public boolean crearRam(String numeroSerie, double precio, int cantidadDispo, String marca, int capacidad,
+			String tipoMemoria) {
+	
+		if(validarSiComponeteExiste(numeroSerie))
+		{
+			return false;
+		}
+		else
+		{
+			this.agregarComponente(new Ram(numeroSerie, precio, cantidadDispo, marca,capacidad,tipoMemoria));
+			return true;
+		}
+
+	}
+
+	public boolean crearFactura(String idCliente, String idEmpleado,ArrayList<Componente> cpts,ArrayList<Combo>cbs)
+	{
+		if(validarSiEmpleadoExiste(idEmpleado) && validarSiClienteExiste(idCliente))
+		{
+			if(cpts.size()>1|| cbs.size()>1)
+			{
+				Factura fact = new Factura(idCliente,idEmpleado);
+				for(Componente cmp:cpts)
+				{
+					fact.agregarComponente(cmp);
+				}
+				for(Combo cb:cbs)
+				{
+					fact.agregarCombo(cb);
+				}
+				return true;
+			}
+		}
+		return false;
+	}
 	
 	
+	private boolean validarSiClienteExiste(String cedula)
+	{
+		for(Cliente cl: clientes)
+		{
+			if(cl.getCedula().equalsIgnoreCase(cedula))
+			{
+				return true;
+			}
+			
+		}
+		return false;
+	}
+
+	private boolean validarSiFacturaExiste(String id)
+	{
+		for(Factura ft: facturas)
+		{
+			if(ft.getIdFactura().equalsIgnoreCase(id))
+			{
+				return true;
+			}
+			
+		}
+		return false;
+	}
+
+	private boolean validarSiEmpleadoExiste(String cedula)
+	{
+		for(Empleado emp: empleados)
+		{
+			if(emp.getCedula().equalsIgnoreCase(cedula))
+			{
+				return true;
+			}
+			
+		}
+		return false;
+	}
+	
+	private boolean validarSiComponeteExiste(String numeroSerie)
+	{
+		for(Componente comp: componentes)
+		{
+			if(comp.numeroSerie.equalsIgnoreCase(numeroSerie))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	
+	
+	private boolean validarCedula(String cedula)
+	{
+		boolean isValid = false;
+		String cd = cedula.replace("-", "");
+		if(cd.length()==11)
+		{
+			if(cd.matches("[0-9]+")){
+				isValid=true;
+			}
+		}
+
+		return isValid;
+		
+	}
 }

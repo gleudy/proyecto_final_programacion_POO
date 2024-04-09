@@ -35,7 +35,7 @@ public class Factura implements Serializable {
 	private String crearID()
 	{
 		String id = "f-"+contadorId;
-		this.idFactura = "f-"+contadorId;
+		this.idFactura = id;
 		contadorId++;
 		return id;
 	}
@@ -86,6 +86,57 @@ public class Factura implements Serializable {
 		this.calcularItbis();
 		this.total = subTotal+itbis;
 
+	}
+	public String getIdFactura() {
+		return idFactura;
+	}
+	public void setIdFactura(String idFactura) {
+		this.idFactura = idFactura;
+	}
+	public String getIdCliente() {
+		return idCliente;
+	}
+	public void setIdCliente(String idCliente) {
+		this.idCliente = idCliente;
+	}
+	public LocalDate getFecha() {
+		return fecha;
+	}
+	public void setFecha(LocalDate fecha) {
+		this.fecha = fecha;
+	}
+	public double getSubTotal() {
+		return subTotal;
+	}
+	public void setSubTotal(double subTotal) {
+		this.subTotal = subTotal;
+	}
+	public double getItbis() {
+		return itbis;
+	}
+	public void setItbis(double itbis) {
+		this.itbis = itbis;
+	}
+	public double getTotal() {
+		return total;
+	}
+	public void setTotal(double total) {
+		this.total = total;
+	}
+	public ArrayList<Componente> getComponentes() {
+		return componentes;
+	}
+	public void setComponentes(ArrayList<Componente> componentes) {
+		this.componentes = componentes;
+	}
+	public ArrayList<Combo> getCombos() {
+		return combos;
+	}
+	public void setCombos(ArrayList<Combo> combos) {
+		this.combos = combos;
+	}
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 	
 	

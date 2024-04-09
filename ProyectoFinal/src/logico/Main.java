@@ -48,7 +48,7 @@ public class Main {
 		
 		
 
-		Combo cb1 = new Combo("c0001");
+		Combo cb1 = new Combo();
 		cb1.agregarComponete(ram);
 		cb1.agregarComponete(micro);
 		cb1.agregarComponete(motherB);

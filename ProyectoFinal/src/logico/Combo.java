@@ -10,14 +10,23 @@ public class Combo implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private String id;
 	private double precio;
+	private static int contadorId =100;
 	private ArrayList<Componente> componentes;
 	
 	
-	public Combo(String id) {
-		this.id = id;
+	public Combo() {
+		crearID();
 		componentes = new ArrayList<Componente>();
 		this.precio = 0;
 	}
+	
+	private void crearID()
+	{
+		String id = "cb-"+contadorId;
+		this.id = id;
+		contadorId++;
+	}
+
 	
 	public int agregarComponete(Componente comp)
 	{
