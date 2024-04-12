@@ -19,6 +19,7 @@ import javax.swing.ImageIcon;
 import javax.swing.Icon;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JPasswordField;
 
 public class Login extends JDialog {
 	
@@ -26,8 +27,8 @@ public class Login extends JDialog {
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtUsuario;
-	private JTextField txtContrasena;
 	public static String usuario;
+	private JPasswordField txtContrasena;
 	
 
   
@@ -93,11 +94,6 @@ public class Login extends JDialog {
 			panel.add(txtUsuario);
 			txtUsuario.setColumns(10);
 			
-			txtContrasena = new JTextField();
-			txtContrasena.setColumns(10);
-			txtContrasena.setBounds(41, 298, 237, 30);
-			panel.add(txtContrasena);
-			
 			JButton btnNewButton = new JButton("Entrar");
 			btnNewButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -112,7 +108,7 @@ public class Login extends JDialog {
 						m.setLocationRelativeTo(null);
 						
 						dispose();
-					}else if(txtUsuario.getText().equalsIgnoreCase("Trabajador") && txtContrasena.getText().equals("1234")) {
+					}else if(txtUsuario.getText().equalsIgnoreCase("Vendedor") && txtContrasena.getText().equals("1234")) {
 						usuario = txtUsuario.getText();
 						JOptionPane.showMessageDialog(null, "Inicio de sesion completado, Bienvenido: " + txtUsuario.getText(), "Aviso", JOptionPane.INFORMATION_MESSAGE);
 						
@@ -148,6 +144,10 @@ public class Login extends JDialog {
 				
 			}
 			
+			txtContrasena = new JPasswordField();
+			txtContrasena.setBounds(41, 296, 237, 30);
+			panel.add(txtContrasena);
+			
 		}
 			
 		}
@@ -169,7 +169,5 @@ public class Login extends JDialog {
 			}
 			
 		}
-		
-		
 	}
 

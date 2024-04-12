@@ -8,11 +8,14 @@ import javax.swing.border.EmptyBorder;
 import java.awt.Panel;
 import javax.swing.JTabbedPane;
 import java.awt.Color;
+import java.awt.Component;
+
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -21,12 +24,17 @@ import java.awt.Font;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
 import file.Guardar;
 import logico.Cliente;
+import logico.Combo;
+import logico.Componente;
 import logico.Disco;
 import logico.Empleado;
+import logico.Factura;
 import logico.Micro;
 import logico.MotherBoard;
 import logico.Ram;
@@ -37,11 +45,19 @@ import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.awt.SystemColor;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.text.DecimalFormat;
+
 import javax.swing.JComboBox;
+import javax.swing.AbstractButton;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JTextArea;
+import javax.swing.JCheckBox;
+
 
 public class Home extends JFrame {
 
@@ -103,6 +119,32 @@ public class Home extends JFrame {
 	private JComboBox<String> cbmTipocliente = new JComboBox<>();;
 	private JButton btnEliminarClientes = new JButton("Eliminar");
 	private JButton btnModificarClientes = new JButton("Modificar");
+	private JTable tableFacturacion;
+	private JTextField txtCantMemoria;
+	private JTextField txtCantidad;
+	private JTextField txtMarca;
+	private JTextField txtTipoCone;
+	private JTextField txtModelo;
+	private JTextField txtTipoMemoria;
+	private JTextField txtAlmacenamiento;
+	private JTextField txtTipoRam;
+	private JTextField txtPrecio;
+	private JTextField txtVelocidad;
+    private JComboBox<String> cbProductos;
+    private JComboBox<String> cbTipos;
+    private HashMap<String, String> productoClaseMap;
+    private Guardar guardar;
+    private JComboBox<String> cbClientes;
+    private JTextField txtCantidadCompra;
+    private DefaultTableModel modelFacturacion;
+    private JCheckBox checkCombo;
+    private JLabel lblTotal;
+    private JLabel lblSubTotal;
+    private JLabel lblTotalDescuento;
+    private JLabel lblTotalItbis;
+    private static final int COLUMNA_COMPONENTE = 0;
+	
+	
 	/**
 	 * Launch the application.
 	 */
@@ -116,23 +158,176 @@ public class Home extends JFrame {
 					e.printStackTrace();
 				}
 			}
+		
 		});
 	}
+	
 
 	/**
 	 * Create the frame.
 	 */
 	public Home() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1073, 670);
+		setBounds(100, 100, 1073, 754);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		cbClientes = new JComboBox<>();
+		checkCombo = new JCheckBox("Activar Combo");
+		lblTotal = new JLabel("0");
+		lblSubTotal = new JLabel("0");
+		lblTotalItbis = new JLabel("0");
+		lblTotalDescuento = new JLabel("0");
+		checkCombo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+		checkCombo.setEnabled(false);
+		
+		
+		productoClaseMap = new HashMap<>();
+        productoClaseMap.put("Disco Duro", "Disco");
+        productoClaseMap.put("Memoria Ram", "Ram");
+        productoClaseMap.put("Mother Board", "MotherBoard");
+        productoClaseMap.put("Microprocesador", "Micro");
+        
+        ArrayList<String> nombresClientes = new ArrayList<>();
 
+     // Obtener la lista de objetos de clientes desde el archivo binario
+     ArrayList<Object> clientes1 = Guardar.getInstance().recuperarObjetos(Guardar.getGuardar().getCliente());
+
+     // Verificar si la lista de clientes no es nula
+     if (clientes1 != null) {
+         // Recorrer la lista de clientes y agregar los nombres al ArrayList
+         for (Object obj : clientes1) {
+             if (obj instanceof Cliente) {
+                 Cliente cliente = (Cliente) obj;
+                 // Agregar el nombre del cliente al ArrayList
+                 nombresClientes.add(cliente.getNombre());
+             }
+         }
+     }
+
+     // Crear un modelo de ComboBox con los nombres de los clientes
+     DefaultComboBoxModel<String> modeloClientes = new DefaultComboBoxModel<>(nombresClientes.toArray(new String[0]));
+
+     // Asignar el modelo de ComboBox al JComboBox
+     cbClientes.setModel(modeloClientes);
+        
+        guardar = Guardar.getInstance();
+		
+        
+		cbTipos = new JComboBox<>();
+		cbTipos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				 // Obtener el número de serie seleccionado en cbTipos
+		        String numeroSerieSeleccionado = (String) cbTipos.getSelectedItem();
+		        ArrayList<Object> componentes = guardar.recuperarObjetos(guardar.getComponente());
+		        // Buscar el componente correspondiente en la lista de componentes
+		        for (Object componente : componentes) {
+		        	if (componente instanceof Disco) {
+		                Disco disco = (Disco) componente;
+		                if (disco.getNumeroSerie().equals(numeroSerieSeleccionado)) {
+		                	txtPrecio.setText(String.valueOf(disco.getPrecio()));
+		                    txtCantidad.setText(String.valueOf(disco.getCantidadDispo()));
+		                    txtMarca.setText(disco.getMarca());
+		                    txtAlmacenamiento.setText(String.valueOf(disco.getAlmacenamiento()));
+		                    txtTipoCone.setText(disco.getTipoConexion());
+		                    txtModelo.setText(disco.getModelo());
+		                    
+		                    break; 
+		                }
+		            } else if (componente instanceof Ram) {
+		                Ram ram = (Ram) componente;
+		                if (ram.getNumeroSerie().equals(numeroSerieSeleccionado)) {
+		                	txtPrecio.setText(String.valueOf(ram.getPrecio()));
+		                    txtCantidad.setText(String.valueOf(ram.getCantidadDispo()));
+		                    txtMarca.setText(ram.getMarca());
+		                    txtCantMemoria.setText(String.valueOf(ram.getCantMemoria()));
+		                    txtTipoMemoria.setText(ram.getTipoMemoria());
+		                    
+		                    break; 
+		             }	else if (componente instanceof Micro) {
+			                Micro micro = (Micro) componente;
+			                if (micro.getNumeroSerie().equals(numeroSerieSeleccionado)) {
+			                	txtPrecio.setText(String.valueOf(micro.getPrecio()));
+			                    txtCantidad.setText(String.valueOf(micro.getCantidadDispo()));
+			                    txtMarca.setText(micro.getMarca());
+			                    txtVelocidad.setText(String.valueOf(micro.getVelocidadProc()));
+			                    txtTipoCone.setText(micro.getTipoConexion());
+			                    txtModelo.setText(micro.getModelo());
+			                    
+			                    break; 
+			                }
+			                }else if (componente instanceof MotherBoard) {
+				                MotherBoard mother = (MotherBoard) componente;
+				                if (mother.getNumeroSerie().equals(numeroSerieSeleccionado)) {
+				                	txtPrecio.setText(String.valueOf(mother.getPrecio()));
+				                    txtCantidad.setText(String.valueOf(mother.getCantidadDispo()));
+				                    txtMarca.setText(mother.getMarca());
+				                    txtModelo.setText(mother.getModelo());
+				                    txtTipoRam.setText(mother.getTipoRam());
+				                    txtTipoCone.setText(mother.getTipoConector());				                    
+				                    break; 
+				                }
+				                }
+		                }}
+		            
+		        
+		            
+		        
+			}
+		});
+        cbTipos.setBounds(535, 65, 168, 29);
+        
+        
+		cbProductos = new JComboBox<>();
+        cbProductos.setModel(new DefaultComboBoxModel<>(new String[]{"-- Elige una opcion","Disco Duro", "Memoria Ram", "Mother Board", "Microprocesador"}));
+        cbProductos.setBounds(307, 65, 191, 29);
+        
+        
+        cbProductos.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	// Obtener el producto seleccionado
+                String productoSeleccionado = (String) cbProductos.getSelectedItem();
+
+                // Limpiar el modelo actual de cbTipos
+                DefaultComboBoxModel<String> modeloTipos = new DefaultComboBoxModel<>();
+
+                // Obtener la lista de componentes desde el archivo binario
+                ArrayList<Object> componentes = guardar.recuperarObjetos(guardar.getComponente());
+
+                // Verificar si la lista de componentes no es nula
+                if (componentes != null) {
+                    // Filtrar los componentes por tipo
+                    for (Object componente : componentes) {
+                        if (componente instanceof Disco && productoSeleccionado.equals("Disco Duro")) {
+                            Disco disco = (Disco) componente;
+                            modeloTipos.addElement(disco.getNumeroSerie());
+                        } else if (componente instanceof Ram && productoSeleccionado.equals("Memoria Ram")) {
+                            Ram ram = (Ram) componente;
+                            modeloTipos.addElement(ram.getNumeroSerie());
+                        } else if (componente instanceof MotherBoard && productoSeleccionado.equals("Mother Board")) {
+                            MotherBoard motherBoard = (MotherBoard) componente;
+                            modeloTipos.addElement(motherBoard.getNumeroSerie());
+                        } else if (componente instanceof Micro && productoSeleccionado.equals("Microprocesador")) {
+                            Micro microprocesador = (Micro) componente;
+                            modeloTipos.addElement(microprocesador.getNumeroSerie());
+                        }
+                    }
+                }
+
+                // Asignar el nuevo modelo al cbTipos
+                cbTipos.setModel(modeloTipos);
+            }
+            
+        });
+       
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		Login l = new Login();
 
-		if (nombreUsuario.equalsIgnoreCase("Trabajador")) {
+		if (nombreUsuario.equalsIgnoreCase("Vendedor")) {
 			Rol = false;
 		} else {
 			Rol = true;
@@ -140,7 +335,7 @@ public class Home extends JFrame {
 
 		JPanel panel = new JPanel();
 		panel.setBackground(new Color(0, 0, 255));
-		panel.setBounds(0, 48, 203, 578);
+		panel.setBounds(0, 48, 203, 677);
 		contentPane.add(panel);
 		panel.setLayout(null);
 
@@ -181,7 +376,7 @@ public class Home extends JFrame {
 		panel_1.add(btnNewButton);
 
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.setBounds(203, 28, 858, 598);
+		tabbedPane.setBounds(203, 30, 858, 685);
 		contentPane.add(tabbedPane);
 
 		JPanel panel_2 = new JPanel();
@@ -694,8 +889,7 @@ public class Home extends JFrame {
 		btnGuardarTrabajador.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				LocalDate fechaActual = LocalDate.now();
-				// Formatear la fecha actual como String (puedes ajustar el formato según lo
-				// necesites)
+				// Formatear la fecha actual como String 
 
 				// Obtener los otros datos ingresados por el usuario desde los campos de texto u
 				// otros componentes
@@ -1712,6 +1906,751 @@ public class Home extends JFrame {
 		lblCrearMotherBoard.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 16));
 		lblCrearMotherBoard.setBounds(348, 5, 172, 30);
 		panel_11.add(lblCrearMotherBoard);
+		
+		JPanel panel_15 = new JPanel();
+		panel_15.setBackground(new Color(255, 255, 255));
+		tabbedPane.addTab("New tab", null, panel_15, null);
+		panel_15.setLayout(null);
+		
+		JPanel panel_16 = new JPanel();
+		panel_16.setBackground(new Color(255, 255, 255));
+		panel_16.setBorder(new LineBorder(new Color(0, 0, 255)));
+		panel_16.setBounds(51, 61, 763, 593);
+		panel_15.add(panel_16);
+		panel_16.setLayout(null);
+		
+		JLabel lblNewLabel_7 = new JLabel("Clientes");
+		lblNewLabel_7.setFont(new Font("Tahoma", Font.BOLD, 16));
+		lblNewLabel_7.setBounds(58, 22, 99, 36);
+		panel_16.add(lblNewLabel_7);
+		
+		JLabel lblNewLabel_7_1 = new JLabel(" Cantidad disponible");
+		lblNewLabel_7_1.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblNewLabel_7_1.setBounds(222, 236, 129, 36);
+		panel_16.add(lblNewLabel_7_1);
+		
+		JLabel lblNewLabel_7_3 = new JLabel("Precio");
+		lblNewLabel_7_3.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblNewLabel_7_3.setBounds(48, 236, 53, 36);
+		panel_16.add(lblNewLabel_7_3);
+		
+		JButton btnFacturar = new JButton("Facturar");
+		btnFacturar.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        String idCliente = "0001";
+		        String idEmpleado = "0001";
+
+		        // Crear una nueva instancia de Factura sin pasar la lista de componentes
+		        Factura nuevaFactura = new Factura(idCliente, idEmpleado);
+		        ArrayList<Componente> componentesParaCombo = new ArrayList<>();
+
+		        // Variables para almacenar los valores de los componentes y del combo
+		        String valorDelComponente1 = "";
+		        String valorDelComponente2 = "";
+		        String valorDelComponente3 = "";
+		        String valorDelComponente4 = "";
+		        String valorDelCombo = "";
+		        String detalle1 = "";
+		        String detalle2 = "";
+		        String detalle3 = "";
+		        String clienteSeleccionado = (String) cbClientes.getSelectedItem();
+		        
+		        DecimalFormat df = new DecimalFormat("#.##");
+
+			    double subTotal = 0;
+			    double totalItbis = 0;
+			    double totalDescuento = 0;
+			    double totalDelDescuento =0;
+			    double total = 0;
+
+			    for (int i = 0; i < modelFacturacion.getRowCount(); i++) {
+			        double subTotalFila = (double) modelFacturacion.getValueAt(i, 4);
+			        double itbisFila = (double) modelFacturacion.getValueAt(i, 5);
+			        double descuentoFila = (double) modelFacturacion.getValueAt(i, 6);
+
+			        subTotal += subTotalFila;
+			        totalItbis += itbisFila;
+			        totalDescuento += descuentoFila;
+			    }
+
+			    // Redondear los valores a dos decimales
+			    subTotal = Double.parseDouble(df.format(subTotal));
+			    totalItbis = Double.parseDouble(df.format(totalItbis));
+			    totalDescuento = Double.parseDouble(df.format(totalDescuento));
+			    totalDelDescuento = Double.parseDouble(df.format(subTotal - totalDescuento));
+			    total = Double.parseDouble(df.format( subTotal+ totalItbis - totalDescuento));
+			    
+		        // Recorrer todas las filas de tableFacturacion
+		        for (int i = 0; i < tableFacturacion.getRowCount(); i++) {
+		            // Obtener el número de serie del componente de la fila actual
+		            String numeroDeSerie = (String) tableFacturacion.getValueAt(i, 0);
+
+		            // Buscar el componente correspondiente en la lista de componentes disponibles
+		            Componente componente = null;
+		            for (Object comp : componentes) {
+		                if (((Componente) comp).getNumeroSerie().equals(numeroDeSerie)) {
+		                    componente = (Componente) comp;
+		                    break;
+		                }
+		            }
+
+		            // Si se encontró el componente, agregarlo al combo o a la factura según corresponda
+		            if (componente != null) {
+		                if (checkCombo.isSelected()) {
+		                    // Si el checkBox está seleccionado, agregar el componente a la lista de componentes para el combo
+		                    componentesParaCombo.add(componente);
+		                } else {
+		                    // Si el checkBox no está seleccionado, agregar el componente a la factura
+		                    nuevaFactura.agregarComponente(componente);
+		                }
+
+		                // Almacenar el valor del componente en la variable correspondiente
+		                if (i == 0) {
+		                    valorDelComponente1 = componente.getNumeroSerie() + ", Precio: " + componente.getPrecio();
+		                } else if (i == 1) {
+		                    valorDelComponente2 = componente.getNumeroSerie() + ", Precio: " + componente.getPrecio();
+		                } else if (i == 2) {
+		                    valorDelComponente3 = componente.getNumeroSerie() + ", Precio: " + componente.getPrecio();
+		                }else if (i == 3) {
+		                    valorDelComponente4 = componente.getNumeroSerie() + ", Precio: " + componente.getPrecio();
+		                }
+		            } else {
+		                // Manejar el caso cuando no se encuentra el componente
+		                JOptionPane.showMessageDialog(null, "No se encontró el componente correspondiente en la fila " + (i + 1), "Error", JOptionPane.ERROR_MESSAGE);
+		                return; // Salir del método
+		            }
+		        }
+
+		        // Si el checkBox está seleccionado y hay componentes suficientes para formar un combo
+		        if (checkCombo.isSelected() && componentesParaCombo.size() >= 3) {
+		            // Crear una nueva instancia de Combo
+		            Combo nuevoCombo = new Combo();
+
+		            // Agregar los primeros 3 o 4 componentes a la instancia de Combo
+		            for (int i = 0; i < Math.min(4, componentesParaCombo.size()); i++) {
+		                nuevoCombo.agregarComponete(componentesParaCombo.get(i));
+		            }
+
+		            // Agregar el combo a la factura
+		            nuevaFactura.agregarCombo(nuevoCombo);
+		            
+		            // Establecer los valores de los combos en la ventana de impresión
+		           if (nuevaFactura.getCombos().size() == 1) {
+		        	   
+					    
+		                valorDelCombo = "- ID Combo: " + nuevoCombo.getId() + ", Precio: " + totalDelDescuento;
+		                for (int i = 0; i < nuevoCombo.getComponentes().size(); i++) {
+		                    Componente comp = nuevoCombo.getComponentes().get(i);
+		                    if (i == 0) {
+		                        detalle1 = comp.getNumeroSerie() + ", Precio: " + comp.getPrecio();
+		                    } else if (i == 1) {
+		                        detalle2 = comp.getNumeroSerie() + ", Precio: " + comp.getPrecio();
+		                    } else if (i == 2) {
+		                        detalle3 = comp.getNumeroSerie() + ", Precio: " + comp.getPrecio();
+		                    }
+		                }
+		            } 
+
+		            // Agregar los componentes adicionales como componentes individuales
+		            for (int i = 4; i < componentesParaCombo.size(); i++) {
+		                nuevaFactura.agregarComponente(componentesParaCombo.get(i));
+		            }
+		        } else {
+		            // Si no se cumple la condición, agregar todos los componentes como componentes individuales
+		            for (Componente comp : componentesParaCombo) {
+		                nuevaFactura.agregarComponente(comp);
+		            }
+		        }
+
+		        // Guardar la factura
+		        Guardar guardar = Guardar.getInstance();
+		        ArrayList<Object> facturas = guardar.recuperarObjetos(guardar.getFactura());
+		        if (facturas == null) {
+		            facturas = new ArrayList<>();
+		        }
+		        facturas.add(nuevaFactura);
+		        guardar.guardarObjetos(facturas, guardar.getFactura());
+
+		        // Limpiar la tabla de facturación después de crear la factura
+		        modelFacturacion.setRowCount(0);
+
+		        // Mostrar mensaje de éxito
+		        JOptionPane.showMessageDialog(null, "Factura creada exitosamente");
+		        
+		        
+		        String idFactura = nuevaFactura.getIdFactura();	
+		        		
+
+		        // Crear la instancia de Impresion y establecer los valores de los componentes y del combo
+		        Impresion impresion = new Impresion();
+		        impresion.setComponente1(valorDelComponente1);
+		        impresion.setComponente2(valorDelComponente2);
+		        impresion.setComponente3(valorDelComponente3);
+		        impresion.setComponente4(valorDelComponente4);
+		        impresion.setCombo(valorDelCombo);
+		        impresion.setTextoCliente(clienteSeleccionado);
+		        impresion.setIdFactura(idFactura);
+		        impresion.setSubtotal(subTotal);
+		        impresion.setItbis(totalItbis);
+		        impresion.setTotal(total);
+		        
+		        
+		        // Mostrar la ventana de impresión
+		        impresion.setVisible(true);
+		        impresion.setLocationRelativeTo(null);
+		    }
+		});
+
+
+
+		btnFacturar.setForeground(Color.WHITE);
+		btnFacturar.setFont(new Font("Tahoma", Font.BOLD, 12));
+		btnFacturar.setBackground(new Color(0, 128, 0));
+		btnFacturar.setBounds(615, 553, 96, 29);
+		panel_16.add(btnFacturar);
+		
+		JButton btnAgregar = new JButton("Agregar");
+		btnAgregar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				DecimalFormat df = new DecimalFormat("#.##");
+
+				String tipo = (String) cbTipos.getSelectedItem();
+				String producto = (String) cbProductos.getSelectedItem();
+				String marca = txtMarca.getText();
+				double precio = Double.parseDouble(txtPrecio.getText());
+				int cantidad = Integer.parseInt(txtCantidadCompra.getText()); 
+
+			
+				double subTotal = precio * cantidad;
+				subTotal = Double.parseDouble(df.format(subTotal)); 
+
+				double itbis = subTotal * 0.18;
+				itbis = Double.parseDouble(df.format(itbis)); 
+
+				double descuento = 0; 
+
+				double total = subTotal + itbis - descuento;
+				total = Double.parseDouble(df.format(total)); 
+
+				// Crear un nuevo objeto con los valores obtenidos
+				Object[] nuevoItem = {tipo, producto, marca, cantidad, subTotal, itbis, descuento, total};
+
+				// Agregar el nuevo ítem al modelo de datos de la tabla
+				modelFacturacion.addRow(nuevoItem);
+
+				refrescarTabla();
+				calcularYActualizarTotal();
+			}
+			public void refrescarTabla() {
+			  
+				modelFacturacion.fireTableDataChanged();
+			    
+			    
+			    tableFacturacion.setRowHeight(25); 
+			    
+			    // Desplazarse a la última fila agregada
+			    int rowCount = modelFacturacion.getRowCount();
+			    if (rowCount > 0) {
+			        tableFacturacion.scrollRectToVisible(tableFacturacion.getCellRect(rowCount - 1, 0, true));
+			    }
+			}
+			private void calcularYActualizarTotal() {
+				 DecimalFormat df = new DecimalFormat("#.##");
+
+				    double subTotal = 0;
+				    double totalItbis = 0;
+				    double totalDescuento = 0;
+				    double total = 0;
+
+				    for (int i = 0; i < modelFacturacion.getRowCount(); i++) {
+				        double subTotalFila = (double) modelFacturacion.getValueAt(i, 4);
+				        double itbisFila = (double) modelFacturacion.getValueAt(i, 5);
+				        double descuentoFila = (double) modelFacturacion.getValueAt(i, 6);
+
+				        subTotal += subTotalFila;
+				        totalItbis += itbisFila;
+				        totalDescuento += descuentoFila;
+				    }
+
+				    // Redondear los valores a dos decimales
+				    subTotal = Double.parseDouble(df.format(subTotal));
+				    totalItbis = Double.parseDouble(df.format(totalItbis));
+				    totalDescuento = Double.parseDouble(df.format(totalDescuento));
+				    total = subTotal + totalItbis - totalDescuento;
+
+				    // Actualizar los JLabels con los nuevos valores
+				    lblSubTotal.setText("$" + subTotal);
+				    lblTotalItbis.setText("$" + totalItbis);
+				    lblTotalDescuento.setText("$" + totalDescuento);
+				    lblTotal.setText("" + total);
+			}
+		});
+		
+		checkCombo.addItemListener(new ItemListener() {
+		    @Override
+		    public void itemStateChanged(ItemEvent e) {
+		        // Verificar si el checkbox está seleccionado
+		        if (e.getStateChange() == ItemEvent.SELECTED) {
+		            // Obtener el número de filas en la tabla
+		            int rowCount = modelFacturacion.getRowCount();
+		            // Verificar si hay al menos tres filas
+		            if (rowCount >= 3 && rowCount <= 4 || rowCount >=7 && rowCount <= 8) {
+		                // Calcular el nuevo descuento del 5%
+		                double nuevoDescuento = 0.05; // 5%
+		                // Actualizar el descuento en el modelo de datos
+		                for (int i = 0; i < rowCount; i++) {
+		                    // Obtener el valor actual del descuento en la fila i
+		                    double descuentoActual = (double) modelFacturacion.getValueAt(i, 6);
+		                    // Calcular el nuevo descuento aplicando el 5% si no había otro descuento aplicado previamente
+		                    if (descuentoActual == 0) {
+		                    	DecimalFormat df = new DecimalFormat("#.##");
+		                    	 double subTotalActual = (double) modelFacturacion.getValueAt(i, 4);
+		                    	   
+		                    	    double nuevoDescuentoTotal = subTotalActual * nuevoDescuento;
+		                    	    
+		        
+		                    	    nuevoDescuentoTotal = Double.parseDouble(df.format(nuevoDescuentoTotal));
+
+		                    	    modelFacturacion.setValueAt(nuevoDescuentoTotal, i, 6);
+
+		                    	    double itbisActual = (double) modelFacturacion.getValueAt(i, 5);
+		                    	    double nuevoTotal = subTotalActual + itbisActual - nuevoDescuentoTotal;
+
+		                    	    nuevoTotal = Double.parseDouble(df.format(nuevoTotal));
+
+		                    	    modelFacturacion.setValueAt(nuevoTotal, i, 7);
+		                    	    
+		                    	    calcularYActualizarTotal();
+		                    }
+		                }
+		                // Notificar a los oyentes que los datos de la tabla han cambiado
+		                modelFacturacion.fireTableDataChanged();
+		                
+		            }
+		        }
+		    }
+		    private void calcularYActualizarTotal() {
+				
+		    	 DecimalFormat df = new DecimalFormat("#.##");
+
+				    double subTotal = 0;
+				    double totalItbis = 0;
+				    double totalDescuento = 0;
+				    double total = 0;
+
+				    for (int i = 0; i < modelFacturacion.getRowCount(); i++) {
+				        double subTotalFila = (double) modelFacturacion.getValueAt(i, 4);
+				        double itbisFila = (double) modelFacturacion.getValueAt(i, 5);
+				        double descuentoFila = (double) modelFacturacion.getValueAt(i, 6);
+
+				        subTotal += subTotalFila;
+				        totalItbis += itbisFila;
+				        totalDescuento += descuentoFila;
+				    }
+
+				    // Redondear los valores a dos decimales
+				    subTotal = Double.parseDouble(df.format(subTotal));
+				    totalItbis = Double.parseDouble(df.format(totalItbis));
+				    totalDescuento = Double.parseDouble(df.format(totalDescuento));
+				    total = subTotal + totalItbis - totalDescuento;
+
+				    // Actualizar los JLabels con los nuevos valores
+				    lblSubTotal.setText("$" + subTotal);
+				    lblTotalItbis.setText("$" + totalItbis);
+				    lblTotalDescuento.setText("$" + totalDescuento);
+				    lblTotal.setText("$" + total);
+			}
+			
+		});	
+		checkCombo.addItemListener(new ItemListener() {
+		    @Override
+		    public void itemStateChanged(ItemEvent e) {
+		        // Verificar si el checkbox está desactivado
+		        if (e.getStateChange() == ItemEvent.DESELECTED) {
+		            // Actualizar el descuento y el total en la tabla
+		            actualizarDescuentoYTotal();
+		            calcularYActualizarTotal();
+		        }else {
+		        	calcularYActualizarTotal();
+		        }
+		    }
+			private void calcularYActualizarTotal() {
+				
+				 DecimalFormat df = new DecimalFormat("#.##");
+
+				    double subTotal = 0;
+				    double totalItbis = 0;
+				    double totalDescuento = 0;
+				    double total = 0;
+
+				    for (int i = 0; i < modelFacturacion.getRowCount(); i++) {
+				        double subTotalFila = (double) modelFacturacion.getValueAt(i, 4);
+				        double itbisFila = (double) modelFacturacion.getValueAt(i, 5);
+				        double descuentoFila = (double) modelFacturacion.getValueAt(i, 6);
+
+				        subTotal += subTotalFila;
+				        totalItbis += itbisFila;
+				        totalDescuento += descuentoFila;
+				    }
+
+				    // Redondear los valores a dos decimales
+				    subTotal = Double.parseDouble(df.format(subTotal));
+				    totalItbis = Double.parseDouble(df.format(totalItbis));
+				    totalDescuento = Double.parseDouble(df.format(totalDescuento));
+				    total = subTotal + totalItbis - totalDescuento;
+
+				    // Actualizar los JLabels con los nuevos valores
+				    lblSubTotal.setText("$" + subTotal);
+				    lblTotalItbis.setText("$" + totalItbis);
+				    lblTotalDescuento.setText("$" + totalDescuento);
+				    lblTotal.setText("$" + total);
+				}
+				
+			
+			// Método para actualizar el descuento y el total en la tabla
+			private void actualizarDescuentoYTotal() {
+			    DecimalFormat df = new DecimalFormat("#.##");
+			    for (int i = 0; i < modelFacturacion.getRowCount(); i++) {
+			        double subTotalActual = (double) modelFacturacion.getValueAt(i, 4);
+			        double itbisActual = (double) modelFacturacion.getValueAt(i, 5);
+			        
+			        double descuentoActual = (double) modelFacturacion.getValueAt(i, 6);
+			        double nuevoDescuentoTotal = 0;
+
+			        if (descuentoActual == 0 && checkCombo.isSelected()) {
+			            // Aplicar descuento del 5% si el checkbox está seleccionado
+			            nuevoDescuentoTotal = subTotalActual * 0.05;
+			        }
+
+			        // Redondear el nuevo descuento a dos decimales
+			        nuevoDescuentoTotal = Double.parseDouble(df.format(nuevoDescuentoTotal));
+
+			        // Actualizar el modelo de datos con el nuevo descuento
+			        modelFacturacion.setValueAt(nuevoDescuentoTotal, i, 6);
+
+			        // Calcular el nuevo total
+			        double nuevoTotal = subTotalActual + itbisActual - nuevoDescuentoTotal;
+			        // Redondear el nuevo total a dos decimales
+			        nuevoTotal = Double.parseDouble(df.format(nuevoTotal));
+			        // Actualizar el modelo de datos con el nuevo total
+			        modelFacturacion.setValueAt(nuevoTotal, i, 7);
+			    }
+			}
+		});
+
+
+
+		btnAgregar.setForeground(Color.WHITE);
+		btnAgregar.setFont(new Font("Tahoma", Font.BOLD, 12));
+		btnAgregar.setBackground(new Color(0, 128, 255));
+		btnAgregar.setBounds(561, 270, 150, 29);
+		panel_16.add(btnAgregar);
+		
+		
+		
+		panel_16.add(cbProductos);
+		
+		
+		
+		
+		panel_16.add(cbTipos);
+		
+		JScrollPane scrollPane_2 = new JScrollPane();
+		scrollPane_2.setBounds(48, 343, 663, 199);
+		panel_16.add(scrollPane_2);
+		
+		tableFacturacion = new JTable();
+		modelFacturacion = new DefaultTableModel();
+		modelFacturacion.addColumn("Codigo");
+		modelFacturacion.addColumn("Nombre");
+		modelFacturacion.addColumn("Marca");
+		modelFacturacion.addColumn("Cantidad");
+		modelFacturacion.addColumn("Sub total");
+		modelFacturacion.addColumn("ITBIS");
+		modelFacturacion.addColumn("Descuento");
+		modelFacturacion.addColumn("Total");
+
+		
+		tableFacturacion = new JTable();
+		tableFacturacion.setModel(modelFacturacion);
+		
+		modelFacturacion.addTableModelListener(new TableModelListener() {
+		    @Override
+		    public void tableChanged(TableModelEvent e) {
+		        // Obtener el número de filas en la tabla
+		        int rowCount = modelFacturacion.getRowCount();
+		        
+		        
+				// Verificar si hay al menos tres filas
+		        if (rowCount >= 3) {
+		            // Activar el checkbox
+		            checkCombo.setEnabled(true);
+		        } else {
+		            // Desactivar el checkbox
+		            checkCombo.setEnabled(false);
+		        }
+		    }
+		});
+		
+		
+
+
+		
+		scrollPane_2.setViewportView(tableFacturacion);
+		
+		JLabel lblNewLabel_7_1_1 = new JLabel("Cantidad memoria");
+		lblNewLabel_7_1_1.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblNewLabel_7_1_1.setBounds(48, 177, 124, 36);
+		panel_16.add(lblNewLabel_7_1_1);
+		
+		txtCantMemoria = new JTextField();
+		txtCantMemoria.setBackground(new Color(192, 192, 192));
+		txtCantMemoria.setEditable(false);
+		txtCantMemoria.setBounds(48, 211, 149, 25);
+		panel_16.add(txtCantMemoria);
+		txtCantMemoria.setColumns(10);
+		
+		txtCantidad = new JTextField();
+		txtCantidad.setBackground(new Color(192, 192, 192));
+		txtCantidad.setEditable(false);
+		txtCantidad.setColumns(10);
+		txtCantidad.setBounds(222, 273, 149, 25);
+		panel_16.add(txtCantidad);
+		
+		JLabel lblNewLabel_7_2 = new JLabel("Tipos de productos");
+		lblNewLabel_7_2.setFont(new Font("Tahoma", Font.BOLD, 16));
+		lblNewLabel_7_2.setBounds(535, 22, 168, 36);
+		panel_16.add(lblNewLabel_7_2);
+		
+		JLabel lblNewLabel_7_1_1_1 = new JLabel("Marca");
+		lblNewLabel_7_1_1_1.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblNewLabel_7_1_1_1.setBounds(48, 118, 53, 36);
+		panel_16.add(lblNewLabel_7_1_1_1);
+		
+		JLabel lblNewLabel_7_1_1_2 = new JLabel("Tipo conexion");
+		lblNewLabel_7_1_1_2.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblNewLabel_7_1_1_2.setBounds(222, 118, 102, 36);
+		panel_16.add(lblNewLabel_7_1_1_2);
+		
+		JLabel lblNewLabel_7_1_1_3 = new JLabel("Modelo");
+		lblNewLabel_7_1_1_3.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblNewLabel_7_1_1_3.setBounds(397, 118, 53, 36);
+		panel_16.add(lblNewLabel_7_1_1_3);
+		
+		JLabel lblNewLabel_7_1_1_4 = new JLabel("Veloc procesamiento");
+		lblNewLabel_7_1_1_4.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblNewLabel_7_1_1_4.setBounds(561, 118, 150, 36);
+		panel_16.add(lblNewLabel_7_1_1_4);
+		
+		txtMarca = new JTextField();
+		txtMarca.setEditable(false);
+		txtMarca.setColumns(10);
+		txtMarca.setBackground(Color.LIGHT_GRAY);
+		txtMarca.setBounds(48, 152, 149, 25);
+		panel_16.add(txtMarca);
+		
+		txtTipoCone = new JTextField();
+		txtTipoCone.setEditable(false);
+		txtTipoCone.setColumns(10);
+		txtTipoCone.setBackground(Color.LIGHT_GRAY);
+		txtTipoCone.setBounds(222, 152, 149, 25);
+		panel_16.add(txtTipoCone);
+		
+		txtModelo = new JTextField();
+		txtModelo.setEditable(false);
+		txtModelo.setColumns(10);
+		txtModelo.setBackground(Color.LIGHT_GRAY);
+		txtModelo.setBounds(397, 154, 149, 25);
+		panel_16.add(txtModelo);
+		
+		JLabel lblNewLabel_7_1_1_2_1 = new JLabel("Tipo memoria");
+		lblNewLabel_7_1_1_2_1.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblNewLabel_7_1_1_2_1.setBounds(222, 177, 84, 36);
+		panel_16.add(lblNewLabel_7_1_1_2_1);
+		
+		txtTipoMemoria = new JTextField();
+		txtTipoMemoria.setEditable(false);
+		txtTipoMemoria.setColumns(10);
+		txtTipoMemoria.setBackground(Color.LIGHT_GRAY);
+		txtTipoMemoria.setBounds(222, 211, 149, 25);
+		panel_16.add(txtTipoMemoria);
+		
+		JLabel lblNewLabel_7_1_1_3_1 = new JLabel("Almacenamiento");
+		lblNewLabel_7_1_1_3_1.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblNewLabel_7_1_1_3_1.setBounds(397, 177, 110, 36);
+		panel_16.add(lblNewLabel_7_1_1_3_1);
+		
+		txtAlmacenamiento = new JTextField();
+		txtAlmacenamiento.setEditable(false);
+		txtAlmacenamiento.setColumns(10);
+		txtAlmacenamiento.setBackground(Color.LIGHT_GRAY);
+		txtAlmacenamiento.setBounds(397, 211, 149, 25);
+		panel_16.add(txtAlmacenamiento);
+		
+		JLabel lblNewLabel_7_1_1_4_1 = new JLabel("Tipo Ram");
+		lblNewLabel_7_1_1_4_1.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblNewLabel_7_1_1_4_1.setBounds(561, 177, 112, 36);
+		panel_16.add(lblNewLabel_7_1_1_4_1);
+		
+		JTextArea textArea = new JTextArea();
+		textArea.setBounds(655, 152, 5, 22);
+		panel_16.add(textArea);
+		
+		txtTipoRam = new JTextField();
+		txtTipoRam.setEditable(false);
+		txtTipoRam.setColumns(10);
+		txtTipoRam.setBackground(Color.LIGHT_GRAY);
+		txtTipoRam.setBounds(562, 211, 149, 25);
+		panel_16.add(txtTipoRam);
+		
+		txtPrecio = new JTextField();
+		txtPrecio.setEditable(false);
+		txtPrecio.setColumns(10);
+		txtPrecio.setBackground(Color.LIGHT_GRAY);
+		txtPrecio.setBounds(48, 273, 149, 25);
+		panel_16.add(txtPrecio);
+		
+		
+		checkCombo.setFont(new Font("Tahoma", Font.BOLD, 14));
+		checkCombo.setBackground(new Color(255, 255, 255));
+		checkCombo.setBounds(574, 305, 129, 23);
+		panel_16.add(checkCombo);
+		
+		txtVelocidad = new JTextField();
+		txtVelocidad.setEditable(false);
+		txtVelocidad.setColumns(10);
+		txtVelocidad.setBackground(Color.LIGHT_GRAY);
+		txtVelocidad.setBounds(561, 154, 149, 25);
+		panel_16.add(txtVelocidad);
+		
+		JLabel lblNewLabel_7_5 = new JLabel("Productos");
+		lblNewLabel_7_5.setFont(new Font("Tahoma", Font.BOLD, 16));
+		lblNewLabel_7_5.setBounds(307, 22, 99, 36);
+		panel_16.add(lblNewLabel_7_5);
+		
+		
+		cbClientes.setBounds(58, 65, 224, 29);
+		panel_16.add(cbClientes);
+		
+		JLabel lblNewLabel_7_1_2 = new JLabel("Cantidad");
+		lblNewLabel_7_1_2.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblNewLabel_7_1_2.setBounds(397, 236, 129, 36);
+		panel_16.add(lblNewLabel_7_1_2);
+		
+		txtCantidadCompra = new JTextField();
+		txtCantidadCompra.setText("1");
+		txtCantidadCompra.setColumns(10);
+		txtCantidadCompra.setBackground(new Color(255, 255, 255));
+		txtCantidadCompra.setBounds(397, 273, 149, 25);
+		panel_16.add(txtCantidadCompra);
+		
+		JLabel lblNewLabel_7_1_1_1_1 = new JLabel("Total de la factura:");
+		lblNewLabel_7_1_1_1_1.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblNewLabel_7_1_1_1_1.setBounds(415, 549, 118, 36);
+		panel_16.add(lblNewLabel_7_1_1_1_1);
+		
+		
+		lblTotal.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblTotal.setBounds(535, 549, 65, 36);
+		panel_16.add(lblTotal);
+		
+		JLabel lblNewLabel_7_1_1_1_1_1 = new JLabel("Sub Total:");
+		lblNewLabel_7_1_1_1_1_1.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblNewLabel_7_1_1_1_1_1.setBounds(21, 549, 65, 36);
+		panel_16.add(lblNewLabel_7_1_1_1_1_1);
+		
+		
+		lblSubTotal.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblSubTotal.setBounds(88, 549, 53, 36);
+		panel_16.add(lblSubTotal);
+		
+		JLabel lblNewLabel_7_1_1_1_1_1_1 = new JLabel("Total ITBIS:");
+		lblNewLabel_7_1_1_1_1_1_1.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblNewLabel_7_1_1_1_1_1_1.setBounds(140, 549, 74, 36);
+		panel_16.add(lblNewLabel_7_1_1_1_1_1_1);
+		
+		
+		lblTotalItbis.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblTotalItbis.setBounds(212, 549, 45, 36);
+		panel_16.add(lblTotalItbis);
+		
+		JLabel lblNewLabel_7_1_1_1_1_2 = new JLabel("Total Descuento:");
+		lblNewLabel_7_1_1_1_1_2.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblNewLabel_7_1_1_1_1_2.setBounds(267, 549, 118, 36);
+		panel_16.add(lblNewLabel_7_1_1_1_1_2);
+		
+		
+		lblTotalDescuento.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblTotalDescuento.setBounds(372, 549, 45, 36);
+		panel_16.add(lblTotalDescuento);
+		
+		JButton btnEliminar = new JButton("Eliminar");
+		btnEliminar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				 int selectedRow = tableFacturacion.getSelectedRow();
+
+			        // Verificar si se seleccionó una fila
+			        if (selectedRow != -1) {
+			            // Eliminar la fila seleccionada del modelo de la tabla
+			            modelFacturacion.removeRow(selectedRow);
+			            calcularYActualizarTotal();
+			        } else {
+			            // Mostrar un mensaje indicando que no se ha seleccionado ninguna fila
+			            JOptionPane.showMessageDialog(null, "Por favor, seleccione una fila para eliminar.",
+			                    "Fila no seleccionada", JOptionPane.WARNING_MESSAGE);
+			        }
+			}
+			private void calcularYActualizarTotal() {
+				 DecimalFormat df = new DecimalFormat("#.##");
+
+				    double subTotal = 0;
+				    double totalItbis = 0;
+				    double totalDescuento = 0;
+				    double total = 0;
+
+				    for (int i = 0; i < modelFacturacion.getRowCount(); i++) {
+				        double subTotalFila = (double) modelFacturacion.getValueAt(i, 4);
+				        double itbisFila = (double) modelFacturacion.getValueAt(i, 5);
+				        double descuentoFila = (double) modelFacturacion.getValueAt(i, 6);
+
+				        subTotal += subTotalFila;
+				        totalItbis += itbisFila;
+				        totalDescuento += descuentoFila;
+				    }
+
+				    // Redondear los valores a dos decimales
+				    subTotal = Double.parseDouble(df.format(subTotal));
+				    totalItbis = Double.parseDouble(df.format(totalItbis));
+				    totalDescuento = Double.parseDouble(df.format(totalDescuento));
+				    total = subTotal + totalItbis - totalDescuento;
+
+				    // Actualizar los JLabels con los nuevos valores
+				    lblSubTotal.setText("$" + subTotal);
+				    lblTotalItbis.setText("$" + totalItbis);
+				    lblTotalDescuento.setText("$" + totalDescuento);
+				    lblTotal.setText("$" + total);
+			}
+		});
+		tableFacturacion.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+		    public void valueChanged(ListSelectionEvent event) {
+		        // Verificar si hay alguna fila seleccionada en la tabla
+		        boolean filaSeleccionada = tableFacturacion.getSelectedRow() != -1;
+
+		        // Habilitar o deshabilitar el botón según si hay una fila seleccionada
+		        btnEliminar.setEnabled(filaSeleccionada);
+		    }
+		});
+		btnEliminar.setEnabled(false);
+		btnEliminar.setForeground(Color.WHITE);
+		btnEliminar.setFont(new Font("Tahoma", Font.BOLD, 12));
+		btnEliminar.setBackground(new Color(255, 0, 0));
+		btnEliminar.setBounds(48, 309, 150, 29);
+		panel_16.add(btnEliminar);
+		
+		JLabel lblNewLabel_7_4 = new JLabel("Facturacion");
+		lblNewLabel_7_4.setFont(new Font("Tahoma", Font.BOLD, 16));
+		lblNewLabel_7_4.setBounds(374, 22, 99, 36);
+		panel_15.add(lblNewLabel_7_4);
 		JButton btnTienda = new JButton("Tienda");
 		btnTienda.setFont(new Font("Tahoma", Font.BOLD, 16));
 		btnTienda.setForeground(new Color(255, 255, 255));
@@ -1721,6 +2660,19 @@ public class Home extends JFrame {
 				tabbedPane.setSelectedIndex(0);
 			}
 		});
+		
+		JButton btnFacturacion = new JButton("Facturacion");
+		btnFacturacion.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				tabbedPane.setSelectedIndex(7);
+			}
+		});
+		btnFacturacion.setForeground(Color.WHITE);
+		btnFacturacion.setFont(new Font("Tahoma", Font.BOLD, 16));
+		btnFacturacion.setEnabled(true);
+		btnFacturacion.setBackground(Color.BLUE);
+		btnFacturacion.setBounds(0, 83, 203, 84);
+		panel.add(btnFacturacion);
 		btnTienda.setBounds(0, 0, 203, 84);
 		panel.add(btnTienda);
 		JButton btnCliente = new JButton("Crear clientes");
@@ -1732,8 +2684,8 @@ public class Home extends JFrame {
 				tabbedPane.setSelectedIndex(1);
 			}
 		});
-		btnCliente.setBounds(0, 83, 203, 84);
-		btnCliente.setEnabled(Rol);
+		btnCliente.setBounds(0, 163, 203, 84);
+		btnCliente.setEnabled(true);
 		panel.add(btnCliente);
 
 		JButton btnTrabajador = new JButton("Crear trabajador");
@@ -1745,7 +2697,7 @@ public class Home extends JFrame {
 		btnTrabajador.setForeground(Color.WHITE);
 		btnTrabajador.setFont(new Font("Tahoma", Font.BOLD, 16));
 		btnTrabajador.setBackground(Color.BLUE);
-		btnTrabajador.setBounds(0, 165, 203, 84);
+		btnTrabajador.setBounds(0, 246, 203, 84);
 		btnTrabajador.setEnabled(Rol);
 		panel.add(btnTrabajador);
 
@@ -1758,7 +2710,8 @@ public class Home extends JFrame {
 		btnMenu_2.setForeground(Color.WHITE);
 		btnMenu_2.setFont(new Font("Tahoma", Font.BOLD, 16));
 		btnMenu_2.setBackground(Color.BLUE);
-		btnMenu_2.setBounds(0, 241, 203, 96);
+		btnMenu_2.setBounds(0, 328, 203, 96);
+		btnMenu_2.setEnabled(Rol);
 
 		panel.add(btnMenu_2);
 
@@ -1771,8 +2724,8 @@ public class Home extends JFrame {
 		btnMenu_3.setForeground(Color.WHITE);
 		btnMenu_3.setFont(new Font("Tahoma", Font.BOLD, 16));
 		btnMenu_3.setBackground(Color.BLUE);
-		btnMenu_3.setBounds(0, 336, 203, 84);
-		btnTrabajador.setEnabled(Rol);
+		btnMenu_3.setBounds(0, 417, 203, 84);
+		btnMenu_3.setEnabled(Rol);
 		panel.add(btnMenu_3);
 
 		JButton btnMenu_3_1 = new JButton("Crear m. procesador");
@@ -1784,7 +2737,8 @@ public class Home extends JFrame {
 		btnMenu_3_1.setForeground(Color.WHITE);
 		btnMenu_3_1.setFont(new Font("Tahoma", Font.BOLD, 16));
 		btnMenu_3_1.setBackground(Color.BLUE);
-		btnMenu_3_1.setBounds(0, 413, 203, 84);
+		btnMenu_3_1.setBounds(0, 499, 203, 84);
+		btnMenu_3_1.setEnabled(Rol);
 		panel.add(btnMenu_3_1);
 
 		JButton btnMenu_3_1_1 = new JButton("Crear t. madre");
@@ -1796,7 +2750,8 @@ public class Home extends JFrame {
 		btnMenu_3_1_1.setForeground(Color.WHITE);
 		btnMenu_3_1_1.setFont(new Font("Tahoma", Font.BOLD, 16));
 		btnMenu_3_1_1.setBackground(Color.BLUE);
-		btnMenu_3_1_1.setBounds(0, 494, 203, 84);
+		btnMenu_3_1_1.setBounds(0, 582, 203, 84);
+		btnMenu_3_1_1.setEnabled(Rol);
 		panel.add(btnMenu_3_1_1);
 
 	}
@@ -1846,7 +2801,4 @@ public class Home extends JFrame {
 			}
 		}
 	}
-	
-	
-	
 }
