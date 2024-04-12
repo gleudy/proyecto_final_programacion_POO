@@ -58,7 +58,6 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTextArea;
 import javax.swing.JCheckBox;
 
-
 public class Home extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -130,21 +129,22 @@ public class Home extends JFrame {
 	private JTextField txtTipoRam;
 	private JTextField txtPrecio;
 	private JTextField txtVelocidad;
-    private JComboBox<String> cbProductos;
-    private JComboBox<String> cbTipos;
-    private HashMap<String, String> productoClaseMap;
-    private Guardar guardar;
-    private JComboBox<String> cbClientes;
-    private JTextField txtCantidadCompra;
-    private DefaultTableModel modelFacturacion;
-    private JCheckBox checkCombo;
-    private JLabel lblTotal;
-    private JLabel lblSubTotal;
-    private JLabel lblTotalDescuento;
-    private JLabel lblTotalItbis;
-    private static final int COLUMNA_COMPONENTE = 0;
-	
-	
+	private JComboBox<String> cbProductos;
+	private JComboBox<String> cbTipos;
+	private HashMap<String, String> productoClaseMap;
+	private Guardar guardar;
+	private JComboBox<String> cbClientes;
+	private JTextField txtCantidadCompra;
+	private DefaultTableModel modelFacturacion;
+	private JCheckBox checkCombo;
+	private JLabel lblTotal;
+	private JLabel lblSubTotal;
+	private JLabel lblTotalDescuento;
+	private JLabel lblTotalItbis;
+	private static final int COLUMNA_COMPONENTE = 0;
+	private JButton btnActualizarCliente = new JButton("Actualizar");
+	private JTextPane txtClienteDireccion = new JTextPane();
+
 	/**
 	 * Launch the application.
 	 */
@@ -158,10 +158,9 @@ public class Home extends JFrame {
 					e.printStackTrace();
 				}
 			}
-		
+
 		});
 	}
-	
 
 	/**
 	 * Create the frame.
@@ -179,150 +178,146 @@ public class Home extends JFrame {
 		lblTotalDescuento = new JLabel("0");
 		checkCombo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
 			}
 		});
 		checkCombo.setEnabled(false);
-		
-		
+
 		productoClaseMap = new HashMap<>();
-        productoClaseMap.put("Disco Duro", "Disco");
-        productoClaseMap.put("Memoria Ram", "Ram");
-        productoClaseMap.put("Mother Board", "MotherBoard");
-        productoClaseMap.put("Microprocesador", "Micro");
-        
-        ArrayList<String> nombresClientes = new ArrayList<>();
+		productoClaseMap.put("Disco Duro", "Disco");
+		productoClaseMap.put("Memoria Ram", "Ram");
+		productoClaseMap.put("Mother Board", "MotherBoard");
+		productoClaseMap.put("Microprocesador", "Micro");
 
-     // Obtener la lista de objetos de clientes desde el archivo binario
-     ArrayList<Object> clientes1 = Guardar.getInstance().recuperarObjetos(Guardar.getGuardar().getCliente());
+		ArrayList<String> nombresClientes = new ArrayList<>();
 
-     // Verificar si la lista de clientes no es nula
-     if (clientes1 != null) {
-         // Recorrer la lista de clientes y agregar los nombres al ArrayList
-         for (Object obj : clientes1) {
-             if (obj instanceof Cliente) {
-                 Cliente cliente = (Cliente) obj;
-                 // Agregar el nombre del cliente al ArrayList
-                 nombresClientes.add(cliente.getNombre());
-             }
-         }
-     }
+		// Obtener la lista de objetos de clientes desde el archivo binario
+		ArrayList<Object> clientes1 = Guardar.getInstance().recuperarObjetos(Guardar.getGuardar().getCliente());
 
-     // Crear un modelo de ComboBox con los nombres de los clientes
-     DefaultComboBoxModel<String> modeloClientes = new DefaultComboBoxModel<>(nombresClientes.toArray(new String[0]));
+		// Verificar si la lista de clientes no es nula
+		if (clientes1 != null) {
+			// Recorrer la lista de clientes y agregar los nombres al ArrayList
+			for (Object obj : clientes1) {
+				if (obj instanceof Cliente) {
+					Cliente cliente = (Cliente) obj;
+					// Agregar el nombre del cliente al ArrayList
+					nombresClientes.add(cliente.getNombre());
+				}
+			}
+		}
 
-     // Asignar el modelo de ComboBox al JComboBox
-     cbClientes.setModel(modeloClientes);
-        
-        guardar = Guardar.getInstance();
-		
-        
+		// Crear un modelo de ComboBox con los nombres de los clientes
+		DefaultComboBoxModel<String> modeloClientes = new DefaultComboBoxModel<>(
+				nombresClientes.toArray(new String[0]));
+
+		// Asignar el modelo de ComboBox al JComboBox
+		cbClientes.setModel(modeloClientes);
+
+		guardar = Guardar.getInstance();
+
 		cbTipos = new JComboBox<>();
 		cbTipos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				 // Obtener el número de serie seleccionado en cbTipos
-		        String numeroSerieSeleccionado = (String) cbTipos.getSelectedItem();
-		        ArrayList<Object> componentes = guardar.recuperarObjetos(guardar.getComponente());
-		        // Buscar el componente correspondiente en la lista de componentes
-		        for (Object componente : componentes) {
-		        	if (componente instanceof Disco) {
-		                Disco disco = (Disco) componente;
-		                if (disco.getNumeroSerie().equals(numeroSerieSeleccionado)) {
-		                	txtPrecio.setText(String.valueOf(disco.getPrecio()));
-		                    txtCantidad.setText(String.valueOf(disco.getCantidadDispo()));
-		                    txtMarca.setText(disco.getMarca());
-		                    txtAlmacenamiento.setText(String.valueOf(disco.getAlmacenamiento()));
-		                    txtTipoCone.setText(disco.getTipoConexion());
-		                    txtModelo.setText(disco.getModelo());
-		                    
-		                    break; 
-		                }
-		            } else if (componente instanceof Ram) {
-		                Ram ram = (Ram) componente;
-		                if (ram.getNumeroSerie().equals(numeroSerieSeleccionado)) {
-		                	txtPrecio.setText(String.valueOf(ram.getPrecio()));
-		                    txtCantidad.setText(String.valueOf(ram.getCantidadDispo()));
-		                    txtMarca.setText(ram.getMarca());
-		                    txtCantMemoria.setText(String.valueOf(ram.getCantMemoria()));
-		                    txtTipoMemoria.setText(ram.getTipoMemoria());
-		                    
-		                    break; 
-		             }	else if (componente instanceof Micro) {
-			                Micro micro = (Micro) componente;
-			                if (micro.getNumeroSerie().equals(numeroSerieSeleccionado)) {
-			                	txtPrecio.setText(String.valueOf(micro.getPrecio()));
-			                    txtCantidad.setText(String.valueOf(micro.getCantidadDispo()));
-			                    txtMarca.setText(micro.getMarca());
-			                    txtVelocidad.setText(String.valueOf(micro.getVelocidadProc()));
-			                    txtTipoCone.setText(micro.getTipoConexion());
-			                    txtModelo.setText(micro.getModelo());
-			                    
-			                    break; 
-			                }
-			                }else if (componente instanceof MotherBoard) {
-				                MotherBoard mother = (MotherBoard) componente;
-				                if (mother.getNumeroSerie().equals(numeroSerieSeleccionado)) {
-				                	txtPrecio.setText(String.valueOf(mother.getPrecio()));
-				                    txtCantidad.setText(String.valueOf(mother.getCantidadDispo()));
-				                    txtMarca.setText(mother.getMarca());
-				                    txtModelo.setText(mother.getModelo());
-				                    txtTipoRam.setText(mother.getTipoRam());
-				                    txtTipoCone.setText(mother.getTipoConector());				                    
-				                    break; 
-				                }
-				                }
-		                }}
-		            
-		        
-		            
-		        
+				// Obtener el número de serie seleccionado en cbTipos
+				String numeroSerieSeleccionado = (String) cbTipos.getSelectedItem();
+				ArrayList<Object> componentes = guardar.recuperarObjetos(guardar.getComponente());
+				// Buscar el componente correspondiente en la lista de componentes
+				for (Object componente : componentes) {
+					if (componente instanceof Disco) {
+						Disco disco = (Disco) componente;
+						if (disco.getNumeroSerie().equals(numeroSerieSeleccionado)) {
+							txtPrecio.setText(String.valueOf(disco.getPrecio()));
+							txtCantidad.setText(String.valueOf(disco.getCantidadDispo()));
+							txtMarca.setText(disco.getMarca());
+							txtAlmacenamiento.setText(String.valueOf(disco.getAlmacenamiento()));
+							txtTipoCone.setText(disco.getTipoConexion());
+							txtModelo.setText(disco.getModelo());
+
+							break;
+						}
+					} else if (componente instanceof Ram) {
+						Ram ram = (Ram) componente;
+						if (ram.getNumeroSerie().equals(numeroSerieSeleccionado)) {
+							txtPrecio.setText(String.valueOf(ram.getPrecio()));
+							txtCantidad.setText(String.valueOf(ram.getCantidadDispo()));
+							txtMarca.setText(ram.getMarca());
+							txtCantMemoria.setText(String.valueOf(ram.getCantMemoria()));
+							txtTipoMemoria.setText(ram.getTipoMemoria());
+
+							break;
+						} else if (componente instanceof Micro) {
+							Micro micro = (Micro) componente;
+							if (micro.getNumeroSerie().equals(numeroSerieSeleccionado)) {
+								txtPrecio.setText(String.valueOf(micro.getPrecio()));
+								txtCantidad.setText(String.valueOf(micro.getCantidadDispo()));
+								txtMarca.setText(micro.getMarca());
+								txtVelocidad.setText(String.valueOf(micro.getVelocidadProc()));
+								txtTipoCone.setText(micro.getTipoConexion());
+								txtModelo.setText(micro.getModelo());
+
+								break;
+							}
+						} else if (componente instanceof MotherBoard) {
+							MotherBoard mother = (MotherBoard) componente;
+							if (mother.getNumeroSerie().equals(numeroSerieSeleccionado)) {
+								txtPrecio.setText(String.valueOf(mother.getPrecio()));
+								txtCantidad.setText(String.valueOf(mother.getCantidadDispo()));
+								txtMarca.setText(mother.getMarca());
+								txtModelo.setText(mother.getModelo());
+								txtTipoRam.setText(mother.getTipoRam());
+								txtTipoCone.setText(mother.getTipoConector());
+								break;
+							}
+						}
+					}
+				}
+
 			}
 		});
-        cbTipos.setBounds(535, 65, 168, 29);
-        
-        
+		cbTipos.setBounds(535, 65, 168, 29);
+
 		cbProductos = new JComboBox<>();
-        cbProductos.setModel(new DefaultComboBoxModel<>(new String[]{"-- Elige una opcion","Disco Duro", "Memoria Ram", "Mother Board", "Microprocesador"}));
-        cbProductos.setBounds(307, 65, 191, 29);
-        
-        
-        cbProductos.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-            	// Obtener el producto seleccionado
-                String productoSeleccionado = (String) cbProductos.getSelectedItem();
+		cbProductos.setModel(new DefaultComboBoxModel<>(new String[] { "-- Elige una opcion", "Disco Duro",
+				"Memoria Ram", "Mother Board", "Microprocesador" }));
+		cbProductos.setBounds(307, 65, 191, 29);
 
-                // Limpiar el modelo actual de cbTipos
-                DefaultComboBoxModel<String> modeloTipos = new DefaultComboBoxModel<>();
+		cbProductos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// Obtener el producto seleccionado
+				String productoSeleccionado = (String) cbProductos.getSelectedItem();
 
-                // Obtener la lista de componentes desde el archivo binario
-                ArrayList<Object> componentes = guardar.recuperarObjetos(guardar.getComponente());
+				// Limpiar el modelo actual de cbTipos
+				DefaultComboBoxModel<String> modeloTipos = new DefaultComboBoxModel<>();
 
-                // Verificar si la lista de componentes no es nula
-                if (componentes != null) {
-                    // Filtrar los componentes por tipo
-                    for (Object componente : componentes) {
-                        if (componente instanceof Disco && productoSeleccionado.equals("Disco Duro")) {
-                            Disco disco = (Disco) componente;
-                            modeloTipos.addElement(disco.getNumeroSerie());
-                        } else if (componente instanceof Ram && productoSeleccionado.equals("Memoria Ram")) {
-                            Ram ram = (Ram) componente;
-                            modeloTipos.addElement(ram.getNumeroSerie());
-                        } else if (componente instanceof MotherBoard && productoSeleccionado.equals("Mother Board")) {
-                            MotherBoard motherBoard = (MotherBoard) componente;
-                            modeloTipos.addElement(motherBoard.getNumeroSerie());
-                        } else if (componente instanceof Micro && productoSeleccionado.equals("Microprocesador")) {
-                            Micro microprocesador = (Micro) componente;
-                            modeloTipos.addElement(microprocesador.getNumeroSerie());
-                        }
-                    }
-                }
+				// Obtener la lista de componentes desde el archivo binario
+				ArrayList<Object> componentes = guardar.recuperarObjetos(guardar.getComponente());
 
-                // Asignar el nuevo modelo al cbTipos
-                cbTipos.setModel(modeloTipos);
-            }
-            
-        });
-       
+				// Verificar si la lista de componentes no es nula
+				if (componentes != null) {
+					// Filtrar los componentes por tipo
+					for (Object componente : componentes) {
+						if (componente instanceof Disco && productoSeleccionado.equals("Disco Duro")) {
+							Disco disco = (Disco) componente;
+							modeloTipos.addElement(disco.getNumeroSerie());
+						} else if (componente instanceof Ram && productoSeleccionado.equals("Memoria Ram")) {
+							Ram ram = (Ram) componente;
+							modeloTipos.addElement(ram.getNumeroSerie());
+						} else if (componente instanceof MotherBoard && productoSeleccionado.equals("Mother Board")) {
+							MotherBoard motherBoard = (MotherBoard) componente;
+							modeloTipos.addElement(motherBoard.getNumeroSerie());
+						} else if (componente instanceof Micro && productoSeleccionado.equals("Microprocesador")) {
+							Micro microprocesador = (Micro) componente;
+							modeloTipos.addElement(microprocesador.getNumeroSerie());
+						}
+					}
+				}
+
+				// Asignar el nuevo modelo al cbTipos
+				cbTipos.setModel(modeloTipos);
+			}
+
+		});
+
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		Login l = new Login();
@@ -564,12 +559,13 @@ public class Home extends JFrame {
 				tableClientes.clearSelection(); // Limpiar la selección de la tabla al hacer clic fuera de ella
 				btnEliminarClientes.setEnabled(false);
 				btnModificarClientes.setEnabled(false);
+				btnActualizarCliente.setEnabled(false);
 			}
 		});
 		panel_4.setBackground(new Color(255, 255, 255));
 		panel_4.setLayout(null);
 		panel_4.setBorder(new LineBorder(new Color(0, 128, 255)));
-		panel_4.setBounds(89, 43, 731, 522);
+		panel_4.setBounds(10, 43, 833, 587);
 		panel_3.add(panel_4);
 
 		JLabel lblNewLabel_1 = new JLabel("Nombre:");
@@ -589,7 +585,7 @@ public class Home extends JFrame {
 
 		txtClienteNombre = new JTextField();
 		txtClienteNombre.setColumns(10);
-		txtClienteNombre.setBounds(348, 50, 359, 30);
+		txtClienteNombre.setBounds(348, 50, 468, 30);
 		panel_4.add(txtClienteNombre);
 
 		txtClienteTelefono = new JTextField();
@@ -597,9 +593,8 @@ public class Home extends JFrame {
 		txtClienteTelefono.setBounds(31, 134, 234, 30);
 		panel_4.add(txtClienteTelefono);
 
-		JTextPane txtClienteDireccion = new JTextPane();
 		txtClienteDireccion.setBackground(new Color(245, 245, 245));
-		txtClienteDireccion.setBounds(348, 134, 359, 49);
+		txtClienteDireccion.setBounds(348, 134, 468, 49);
 		panel_4.add(txtClienteDireccion);
 
 		JLabel lblNewLabel_1_3 = new JLabel("Cedula");
@@ -625,7 +620,7 @@ public class Home extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				String cedula = txtClienteCedula.getText();
 				String nombre = txtClienteNombre.getText();
-				String telefono = (String) txtClienteTelefono.getText();
+				String telefono = txtClienteTelefono.getText();
 				String direccion = txtClienteDireccion.getText();
 				String tipoCliente = (String) cbmTipocliente.getSelectedItem();
 
@@ -650,10 +645,10 @@ public class Home extends JFrame {
 							JOptionPane.WARNING_MESSAGE);
 
 				} else if (!validadOnceDigitos(txtClienteCedula)) {
-					JOptionPane.showMessageDialog(null, "En campo cedula debe tener 11 digitos. ", "Aviso",
+					JOptionPane.showMessageDialog(null, "En campo cedula debe tener 11 digitos numericos. ", "Aviso",
 							JOptionPane.WARNING_MESSAGE);
 				} else if (!validadOnceDigitos(txtClienteTelefono)) {
-					JOptionPane.showMessageDialog(null, "En campo telefono debe tener 11 digitos. ", "Aviso",
+					JOptionPane.showMessageDialog(null, "En campo telefono debe tener 11 digitos numericos. ", "Aviso",
 							JOptionPane.WARNING_MESSAGE);
 				} else if (nuevoCliente.getNombre().equals(null) || nuevoCliente.getNombre().equals("")) {
 					JOptionPane.showMessageDialog(null, "Debe llenar el campo nombre. ", "Aviso",
@@ -702,15 +697,15 @@ public class Home extends JFrame {
 		scrollPane.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				int selectedrow=tableClientes.getSelectedRow();
-				DefaultTableModel model=(DefaultTableModel)tableClientes.getModel();
-				txtClienteCedula.setText(model.getValueAt(selectedrow,0).toString());
+				int selectedrow = tableClientes.getSelectedRow();
+				DefaultTableModel model = (DefaultTableModel) tableClientes.getModel();
+				txtClienteCedula.setText(model.getValueAt(selectedrow, 0).toString());
 				txtClienteNombre.setText(model.getValueAt(selectedrow, 1).toString());
 				txtClienteTelefono.setText(model.getValueAt(selectedrow, 2).toString());
 				txtClienteDireccion.setText(model.getValueAt(selectedrow, 3).toString());
-				String valorEncontrado=model.getValueAt(selectedrow, 3).toString();
+				String valorEncontrado = model.getValueAt(selectedrow, 3).toString();
 				for (int i = 0; i < cbmTipocliente.getItemCount(); i++) {
-					String articulo=cbmTipocliente.getItemAt(i);
+					String articulo = cbmTipocliente.getItemAt(i);
 					if (articulo.equals(valorEncontrado)) {
 						cbmTipocliente.setSelectedIndex(i);
 						break;
@@ -718,7 +713,7 @@ public class Home extends JFrame {
 				}
 			}
 		});
-		scrollPane.setBounds(31, 270, 676, 241);
+		scrollPane.setBounds(31, 270, 785, 241);
 		panel_4.add(scrollPane);
 
 		tableClientes = new JTable();
@@ -731,6 +726,7 @@ public class Home extends JFrame {
 						tableClientes.setRowSelectionInterval(selectedRow, selectedRow); // Seleccionar la fila
 						btnEliminarClientes.setEnabled(true);
 						btnModificarClientes.setEnabled(true);
+
 					}
 				}
 			}
@@ -760,20 +756,19 @@ public class Home extends JFrame {
 		scrollPane.setViewportView(tableClientes);
 		btnModificarClientes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int i=tableClientes.getSelectedRow();
-				DefaultTableModel model= (DefaultTableModel)tableClientes.getModel();
-				if(i>=0) {
-					model.setValueAt(txtClienteCedula, i, 0);
-					model.setValueAt(txtClienteNombre, i, 1);
-					model.setValueAt(txtClienteTelefono, i, 2);
-					model.setValueAt(txtClienteDireccion, i, 3);
-					
-					
+				int i = tableClientes.getSelectedRow();
+				DefaultTableModel model = (DefaultTableModel) tableClientes.getModel();
+				if (i != -1) {
+					guardarDatosFilaSeleccionada(model, tableClientes);
+				} else {
+					// Mostrar un mensaje indicando que no se ha seleccionado ninguna fila
+					JOptionPane.showMessageDialog(null, "Por favor, seleccione una fila para modificar.", "Error",
+							JOptionPane.ERROR_MESSAGE);
 				}
+				btnActualizarCliente.setEnabled(true);
 			}
 		});
 
-		
 		btnModificarClientes.setEnabled(false);
 		btnModificarClientes.setForeground(Color.WHITE);
 		btnModificarClientes.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -781,7 +776,7 @@ public class Home extends JFrame {
 		btnModificarClientes.setBounds(471, 194, 99, 49);
 		panel_4.add(btnModificarClientes);
 		// GLEUDY GOMEZ
-		
+
 		btnEliminarClientes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int respuesta = JOptionPane.showConfirmDialog(null, "¿Desea eliminar el cliente?", "Aviso",
@@ -796,7 +791,7 @@ public class Home extends JFrame {
 		btnEliminarClientes.setForeground(Color.WHITE);
 		btnEliminarClientes.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnEliminarClientes.setBackground(new Color(139, 0, 0));
-		btnEliminarClientes.setBounds(608, 197, 99, 49);
+		btnEliminarClientes.setBounds(590, 194, 99, 49);
 		panel_4.add(btnEliminarClientes);
 
 		JLabel lblNewLabel_4 = new JLabel("Ej: 13100099536");
@@ -825,6 +820,71 @@ public class Home extends JFrame {
 				new DefaultComboBoxModel(new String[] { "--Seleccione", "Regular", "Revendedor", "Mayorista" }));
 		cbmTipocliente.setBounds(31, 209, 234, 34);
 		panel_4.add(cbmTipocliente);
+		btnActualizarCliente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				int respuesta = JOptionPane.showConfirmDialog(null, "¿Desea actualizar el cliente?", "Aviso",
+						JOptionPane.INFORMATION_MESSAGE);
+
+				if (respuesta == JOptionPane.YES_OPTION) {
+
+					if (respuesta == JOptionPane.YES_OPTION) {
+						if (txtClienteCedula.getText().equals(null) || txtClienteCedula.getText().equals("")) {
+
+							JOptionPane.showMessageDialog(null, "Debe llenar el campo cedula. ", "Aviso",
+
+									JOptionPane.WARNING_MESSAGE);
+
+						} else if (!validadOnceDigitos(txtClienteCedula)) {
+
+							JOptionPane.showMessageDialog(null, "En campo cedula debe tener 11 digitos numericos. ",
+									"Aviso",
+
+									JOptionPane.WARNING_MESSAGE);
+
+						} else if (!validadOnceDigitos(txtClienteTelefono)) {
+
+							JOptionPane.showMessageDialog(null, "En campo telefono debe tener 11 digitos numericos. ",
+									"Aviso",
+
+									JOptionPane.WARNING_MESSAGE);
+
+						} else if (txtClienteNombre.getText().equals(null) || txtClienteNombre.getText().equals("")) {
+
+							JOptionPane.showMessageDialog(null, "Debe llenar el campo nombre. ", "Aviso",
+
+									JOptionPane.WARNING_MESSAGE);
+
+						} else if (cbmTipocliente.getSelectedItem().equals("--Seleccione")) {
+
+							JOptionPane.showMessageDialog(null, "Debe seleccionar un tipo de cliente. ", "Aviso",
+
+									JOptionPane.WARNING_MESSAGE);
+
+						} else {
+							actualizarDatosCliente();
+							txtClienteCedula.setText("");
+							txtClienteNombre.setText("");
+							txtClienteTelefono.setText("");
+							txtClienteDireccion.setText("");
+							cbmTipocliente.setSelectedIndex(0);
+
+							btnActualizarCliente.setEnabled(false);
+						}
+
+					}
+
+				}
+
+			}
+		});
+
+		btnActualizarCliente.setEnabled(false);
+		btnActualizarCliente.setForeground(Color.WHITE);
+		btnActualizarCliente.setFont(new Font("Tahoma", Font.BOLD, 14));
+		btnActualizarCliente.setBackground(new Color(30, 144, 255));
+		btnActualizarCliente.setBounds(699, 194, 117, 49);
+		panel_4.add(btnActualizarCliente);
 
 		JLabel lblCrearCliente = new JLabel("Crear Cliente");
 		lblCrearCliente.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 16));
@@ -889,7 +949,7 @@ public class Home extends JFrame {
 		btnGuardarTrabajador.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				LocalDate fechaActual = LocalDate.now();
-				// Formatear la fecha actual como String 
+				// Formatear la fecha actual como String
 
 				// Obtener los otros datos ingresados por el usuario desde los campos de texto u
 				// otros componentes
@@ -1906,209 +1966,210 @@ public class Home extends JFrame {
 		lblCrearMotherBoard.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 16));
 		lblCrearMotherBoard.setBounds(348, 5, 172, 30);
 		panel_11.add(lblCrearMotherBoard);
-		
+
 		JPanel panel_15 = new JPanel();
 		panel_15.setBackground(new Color(255, 255, 255));
 		tabbedPane.addTab("New tab", null, panel_15, null);
 		panel_15.setLayout(null);
-		
+
 		JPanel panel_16 = new JPanel();
 		panel_16.setBackground(new Color(255, 255, 255));
 		panel_16.setBorder(new LineBorder(new Color(0, 0, 255)));
 		panel_16.setBounds(51, 61, 763, 593);
 		panel_15.add(panel_16);
 		panel_16.setLayout(null);
-		
+
 		JLabel lblNewLabel_7 = new JLabel("Clientes");
 		lblNewLabel_7.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lblNewLabel_7.setBounds(58, 22, 99, 36);
 		panel_16.add(lblNewLabel_7);
-		
+
 		JLabel lblNewLabel_7_1 = new JLabel(" Cantidad disponible");
 		lblNewLabel_7_1.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblNewLabel_7_1.setBounds(222, 236, 129, 36);
 		panel_16.add(lblNewLabel_7_1);
-		
+
 		JLabel lblNewLabel_7_3 = new JLabel("Precio");
 		lblNewLabel_7_3.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblNewLabel_7_3.setBounds(48, 236, 53, 36);
 		panel_16.add(lblNewLabel_7_3);
-		
+
 		JButton btnFacturar = new JButton("Facturar");
 		btnFacturar.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		        String idCliente = "0001";
-		        String idEmpleado = "0001";
+			public void actionPerformed(ActionEvent e) {
+				String idCliente = "0001";
+				String idEmpleado = "0001";
 
-		        // Crear una nueva instancia de Factura sin pasar la lista de componentes
-		        Factura nuevaFactura = new Factura(idCliente, idEmpleado);
-		        ArrayList<Componente> componentesParaCombo = new ArrayList<>();
+				// Crear una nueva instancia de Factura sin pasar la lista de componentes
+				Factura nuevaFactura = new Factura(idCliente, idEmpleado);
+				ArrayList<Componente> componentesParaCombo = new ArrayList<>();
 
-		        // Variables para almacenar los valores de los componentes y del combo
-		        String valorDelComponente1 = "";
-		        String valorDelComponente2 = "";
-		        String valorDelComponente3 = "";
-		        String valorDelComponente4 = "";
-		        String valorDelCombo = "";
-		        String detalle1 = "";
-		        String detalle2 = "";
-		        String detalle3 = "";
-		        String clienteSeleccionado = (String) cbClientes.getSelectedItem();
-		        
-		        DecimalFormat df = new DecimalFormat("#.##");
+				// Variables para almacenar los valores de los componentes y del combo
+				String valorDelComponente1 = "";
+				String valorDelComponente2 = "";
+				String valorDelComponente3 = "";
+				String valorDelComponente4 = "";
+				String valorDelCombo = "";
+				String detalle1 = "";
+				String detalle2 = "";
+				String detalle3 = "";
+				String clienteSeleccionado = (String) cbClientes.getSelectedItem();
 
-			    double subTotal = 0;
-			    double totalItbis = 0;
-			    double totalDescuento = 0;
-			    double totalDelDescuento =0;
-			    double total = 0;
+				DecimalFormat df = new DecimalFormat("#.##");
 
-			    for (int i = 0; i < modelFacturacion.getRowCount(); i++) {
-			        double subTotalFila = (double) modelFacturacion.getValueAt(i, 4);
-			        double itbisFila = (double) modelFacturacion.getValueAt(i, 5);
-			        double descuentoFila = (double) modelFacturacion.getValueAt(i, 6);
+				double subTotal = 0;
+				double totalItbis = 0;
+				double totalDescuento = 0;
+				double totalDelDescuento = 0;
+				double total = 0;
 
-			        subTotal += subTotalFila;
-			        totalItbis += itbisFila;
-			        totalDescuento += descuentoFila;
-			    }
+				for (int i = 0; i < modelFacturacion.getRowCount(); i++) {
+					double subTotalFila = (double) modelFacturacion.getValueAt(i, 4);
+					double itbisFila = (double) modelFacturacion.getValueAt(i, 5);
+					double descuentoFila = (double) modelFacturacion.getValueAt(i, 6);
 
-			    // Redondear los valores a dos decimales
-			    subTotal = Double.parseDouble(df.format(subTotal));
-			    totalItbis = Double.parseDouble(df.format(totalItbis));
-			    totalDescuento = Double.parseDouble(df.format(totalDescuento));
-			    totalDelDescuento = Double.parseDouble(df.format(subTotal - totalDescuento));
-			    total = Double.parseDouble(df.format( subTotal+ totalItbis - totalDescuento));
-			    
-		        // Recorrer todas las filas de tableFacturacion
-		        for (int i = 0; i < tableFacturacion.getRowCount(); i++) {
-		            // Obtener el número de serie del componente de la fila actual
-		            String numeroDeSerie = (String) tableFacturacion.getValueAt(i, 0);
+					subTotal += subTotalFila;
+					totalItbis += itbisFila;
+					totalDescuento += descuentoFila;
+				}
 
-		            // Buscar el componente correspondiente en la lista de componentes disponibles
-		            Componente componente = null;
-		            for (Object comp : componentes) {
-		                if (((Componente) comp).getNumeroSerie().equals(numeroDeSerie)) {
-		                    componente = (Componente) comp;
-		                    break;
-		                }
-		            }
+				// Redondear los valores a dos decimales
+				subTotal = Double.parseDouble(df.format(subTotal));
+				totalItbis = Double.parseDouble(df.format(totalItbis));
+				totalDescuento = Double.parseDouble(df.format(totalDescuento));
+				totalDelDescuento = Double.parseDouble(df.format(subTotal - totalDescuento));
+				total = Double.parseDouble(df.format(subTotal + totalItbis - totalDescuento));
 
-		            // Si se encontró el componente, agregarlo al combo o a la factura según corresponda
-		            if (componente != null) {
-		                if (checkCombo.isSelected()) {
-		                    // Si el checkBox está seleccionado, agregar el componente a la lista de componentes para el combo
-		                    componentesParaCombo.add(componente);
-		                } else {
-		                    // Si el checkBox no está seleccionado, agregar el componente a la factura
-		                    nuevaFactura.agregarComponente(componente);
-		                }
+				// Recorrer todas las filas de tableFacturacion
+				for (int i = 0; i < tableFacturacion.getRowCount(); i++) {
+					// Obtener el número de serie del componente de la fila actual
+					String numeroDeSerie = (String) tableFacturacion.getValueAt(i, 0);
 
-		                // Almacenar el valor del componente en la variable correspondiente
-		                if (i == 0) {
-		                    valorDelComponente1 = componente.getNumeroSerie() + ", Precio: " + componente.getPrecio();
-		                } else if (i == 1) {
-		                    valorDelComponente2 = componente.getNumeroSerie() + ", Precio: " + componente.getPrecio();
-		                } else if (i == 2) {
-		                    valorDelComponente3 = componente.getNumeroSerie() + ", Precio: " + componente.getPrecio();
-		                }else if (i == 3) {
-		                    valorDelComponente4 = componente.getNumeroSerie() + ", Precio: " + componente.getPrecio();
-		                }
-		            } else {
-		                // Manejar el caso cuando no se encuentra el componente
-		                JOptionPane.showMessageDialog(null, "No se encontró el componente correspondiente en la fila " + (i + 1), "Error", JOptionPane.ERROR_MESSAGE);
-		                return; // Salir del método
-		            }
-		        }
+					// Buscar el componente correspondiente en la lista de componentes disponibles
+					Componente componente = null;
+					for (Object comp : componentes) {
+						if (((Componente) comp).getNumeroSerie().equals(numeroDeSerie)) {
+							componente = (Componente) comp;
+							break;
+						}
+					}
 
-		        // Si el checkBox está seleccionado y hay componentes suficientes para formar un combo
-		        if (checkCombo.isSelected() && componentesParaCombo.size() >= 3) {
-		            // Crear una nueva instancia de Combo
-		            Combo nuevoCombo = new Combo();
+					// Si se encontró el componente, agregarlo al combo o a la factura según
+					// corresponda
+					if (componente != null) {
+						if (checkCombo.isSelected()) {
+							// Si el checkBox está seleccionado, agregar el componente a la lista de
+							// componentes para el combo
+							componentesParaCombo.add(componente);
+						} else {
+							// Si el checkBox no está seleccionado, agregar el componente a la factura
+							nuevaFactura.agregarComponente(componente);
+						}
 
-		            // Agregar los primeros 3 o 4 componentes a la instancia de Combo
-		            for (int i = 0; i < Math.min(4, componentesParaCombo.size()); i++) {
-		                nuevoCombo.agregarComponete(componentesParaCombo.get(i));
-		            }
+						// Almacenar el valor del componente en la variable correspondiente
+						if (i == 0) {
+							valorDelComponente1 = componente.getNumeroSerie() + ", Precio: " + componente.getPrecio();
+						} else if (i == 1) {
+							valorDelComponente2 = componente.getNumeroSerie() + ", Precio: " + componente.getPrecio();
+						} else if (i == 2) {
+							valorDelComponente3 = componente.getNumeroSerie() + ", Precio: " + componente.getPrecio();
+						} else if (i == 3) {
+							valorDelComponente4 = componente.getNumeroSerie() + ", Precio: " + componente.getPrecio();
+						}
+					} else {
+						// Manejar el caso cuando no se encuentra el componente
+						JOptionPane.showMessageDialog(null,
+								"No se encontró el componente correspondiente en la fila " + (i + 1), "Error",
+								JOptionPane.ERROR_MESSAGE);
+						return; // Salir del método
+					}
+				}
 
-		            // Agregar el combo a la factura
-		            nuevaFactura.agregarCombo(nuevoCombo);
-		            
-		            // Establecer los valores de los combos en la ventana de impresión
-		           if (nuevaFactura.getCombos().size() == 1) {
-		        	   
-					    
-		                valorDelCombo = "- ID Combo: " + nuevoCombo.getId() + ", Precio: " + totalDelDescuento;
-		                for (int i = 0; i < nuevoCombo.getComponentes().size(); i++) {
-		                    Componente comp = nuevoCombo.getComponentes().get(i);
-		                    if (i == 0) {
-		                        detalle1 = comp.getNumeroSerie() + ", Precio: " + comp.getPrecio();
-		                    } else if (i == 1) {
-		                        detalle2 = comp.getNumeroSerie() + ", Precio: " + comp.getPrecio();
-		                    } else if (i == 2) {
-		                        detalle3 = comp.getNumeroSerie() + ", Precio: " + comp.getPrecio();
-		                    }
-		                }
-		            } 
+				// Si el checkBox está seleccionado y hay componentes suficientes para formar un
+				// combo
+				if (checkCombo.isSelected() && componentesParaCombo.size() >= 3) {
+					// Crear una nueva instancia de Combo
+					Combo nuevoCombo = new Combo();
 
-		            // Agregar los componentes adicionales como componentes individuales
-		            for (int i = 4; i < componentesParaCombo.size(); i++) {
-		                nuevaFactura.agregarComponente(componentesParaCombo.get(i));
-		            }
-		        } else {
-		            // Si no se cumple la condición, agregar todos los componentes como componentes individuales
-		            for (Componente comp : componentesParaCombo) {
-		                nuevaFactura.agregarComponente(comp);
-		            }
-		        }
+					// Agregar los primeros 3 o 4 componentes a la instancia de Combo
+					for (int i = 0; i < Math.min(4, componentesParaCombo.size()); i++) {
+						nuevoCombo.agregarComponete(componentesParaCombo.get(i));
+					}
 
-		        // Guardar la factura
-		        Guardar guardar = Guardar.getInstance();
-		        ArrayList<Object> facturas = guardar.recuperarObjetos(guardar.getFactura());
-		        if (facturas == null) {
-		            facturas = new ArrayList<>();
-		        }
-		        facturas.add(nuevaFactura);
-		        guardar.guardarObjetos(facturas, guardar.getFactura());
+					// Agregar el combo a la factura
+					nuevaFactura.agregarCombo(nuevoCombo);
 
-		        // Limpiar la tabla de facturación después de crear la factura
-		        modelFacturacion.setRowCount(0);
+					// Establecer los valores de los combos en la ventana de impresión
+					if (nuevaFactura.getCombos().size() == 1) {
 
-		        // Mostrar mensaje de éxito
-		        JOptionPane.showMessageDialog(null, "Factura creada exitosamente");
-		        
-		        
-		        String idFactura = nuevaFactura.getIdFactura();	
-		        		
+						valorDelCombo = "- ID Combo: " + nuevoCombo.getId() + ", Precio: " + totalDelDescuento;
+						for (int i = 0; i < nuevoCombo.getComponentes().size(); i++) {
+							Componente comp = nuevoCombo.getComponentes().get(i);
+							if (i == 0) {
+								detalle1 = comp.getNumeroSerie() + ", Precio: " + comp.getPrecio();
+							} else if (i == 1) {
+								detalle2 = comp.getNumeroSerie() + ", Precio: " + comp.getPrecio();
+							} else if (i == 2) {
+								detalle3 = comp.getNumeroSerie() + ", Precio: " + comp.getPrecio();
+							}
+						}
+					}
 
-		        // Crear la instancia de Impresion y establecer los valores de los componentes y del combo
-		        Impresion impresion = new Impresion();
-		        impresion.setComponente1(valorDelComponente1);
-		        impresion.setComponente2(valorDelComponente2);
-		        impresion.setComponente3(valorDelComponente3);
-		        impresion.setComponente4(valorDelComponente4);
-		        impresion.setCombo(valorDelCombo);
-		        impresion.setTextoCliente(clienteSeleccionado);
-		        impresion.setIdFactura(idFactura);
-		        impresion.setSubtotal(subTotal);
-		        impresion.setItbis(totalItbis);
-		        impresion.setTotal(total);
-		        
-		        
-		        // Mostrar la ventana de impresión
-		        impresion.setVisible(true);
-		        impresion.setLocationRelativeTo(null);
-		    }
+					// Agregar los componentes adicionales como componentes individuales
+					for (int i = 4; i < componentesParaCombo.size(); i++) {
+						nuevaFactura.agregarComponente(componentesParaCombo.get(i));
+					}
+				} else {
+					// Si no se cumple la condición, agregar todos los componentes como componentes
+					// individuales
+					for (Componente comp : componentesParaCombo) {
+						nuevaFactura.agregarComponente(comp);
+					}
+				}
+
+				// Guardar la factura
+				Guardar guardar = Guardar.getInstance();
+				ArrayList<Object> facturas = guardar.recuperarObjetos(guardar.getFactura());
+				if (facturas == null) {
+					facturas = new ArrayList<>();
+				}
+				facturas.add(nuevaFactura);
+				guardar.guardarObjetos(facturas, guardar.getFactura());
+
+				// Limpiar la tabla de facturación después de crear la factura
+				modelFacturacion.setRowCount(0);
+
+				// Mostrar mensaje de éxito
+				JOptionPane.showMessageDialog(null, "Factura creada exitosamente");
+
+				String idFactura = nuevaFactura.getIdFactura();
+
+				// Crear la instancia de Impresion y establecer los valores de los componentes y
+				// del combo
+				Impresion impresion = new Impresion();
+				impresion.setComponente1(valorDelComponente1);
+				impresion.setComponente2(valorDelComponente2);
+				impresion.setComponente3(valorDelComponente3);
+				impresion.setComponente4(valorDelComponente4);
+				impresion.setCombo(valorDelCombo);
+				impresion.setTextoCliente(clienteSeleccionado);
+				impresion.setIdFactura(idFactura);
+				impresion.setSubtotal(subTotal);
+				impresion.setItbis(totalItbis);
+				impresion.setTotal(total);
+
+				// Mostrar la ventana de impresión
+				impresion.setVisible(true);
+				impresion.setLocationRelativeTo(null);
+			}
 		});
-
-
 
 		btnFacturar.setForeground(Color.WHITE);
 		btnFacturar.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnFacturar.setBackground(new Color(0, 128, 0));
 		btnFacturar.setBounds(615, 553, 96, 29);
 		panel_16.add(btnFacturar);
-		
+
 		JButton btnAgregar = new JButton("Agregar");
 		btnAgregar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -2118,22 +2179,21 @@ public class Home extends JFrame {
 				String producto = (String) cbProductos.getSelectedItem();
 				String marca = txtMarca.getText();
 				double precio = Double.parseDouble(txtPrecio.getText());
-				int cantidad = Integer.parseInt(txtCantidadCompra.getText()); 
+				int cantidad = Integer.parseInt(txtCantidadCompra.getText());
 
-			
 				double subTotal = precio * cantidad;
-				subTotal = Double.parseDouble(df.format(subTotal)); 
+				subTotal = Double.parseDouble(df.format(subTotal));
 
 				double itbis = subTotal * 0.18;
-				itbis = Double.parseDouble(df.format(itbis)); 
+				itbis = Double.parseDouble(df.format(itbis));
 
-				double descuento = 0; 
+				double descuento = 0;
 
 				double total = subTotal + itbis - descuento;
-				total = Double.parseDouble(df.format(total)); 
+				total = Double.parseDouble(df.format(total));
 
 				// Crear un nuevo objeto con los valores obtenidos
-				Object[] nuevoItem = {tipo, producto, marca, cantidad, subTotal, itbis, descuento, total};
+				Object[] nuevoItem = { tipo, producto, marca, cantidad, subTotal, itbis, descuento, total };
 
 				// Agregar el nuevo ítem al modelo de datos de la tabla
 				modelFacturacion.addRow(nuevoItem);
@@ -2141,224 +2201,219 @@ public class Home extends JFrame {
 				refrescarTabla();
 				calcularYActualizarTotal();
 			}
+
 			public void refrescarTabla() {
-			  
+
 				modelFacturacion.fireTableDataChanged();
-			    
-			    
-			    tableFacturacion.setRowHeight(25); 
-			    
-			    // Desplazarse a la última fila agregada
-			    int rowCount = modelFacturacion.getRowCount();
-			    if (rowCount > 0) {
-			        tableFacturacion.scrollRectToVisible(tableFacturacion.getCellRect(rowCount - 1, 0, true));
-			    }
+
+				tableFacturacion.setRowHeight(25);
+
+				// Desplazarse a la última fila agregada
+				int rowCount = modelFacturacion.getRowCount();
+				if (rowCount > 0) {
+					tableFacturacion.scrollRectToVisible(tableFacturacion.getCellRect(rowCount - 1, 0, true));
+				}
 			}
+
 			private void calcularYActualizarTotal() {
-				 DecimalFormat df = new DecimalFormat("#.##");
+				DecimalFormat df = new DecimalFormat("#.##");
 
-				    double subTotal = 0;
-				    double totalItbis = 0;
-				    double totalDescuento = 0;
-				    double total = 0;
+				double subTotal = 0;
+				double totalItbis = 0;
+				double totalDescuento = 0;
+				double total = 0;
 
-				    for (int i = 0; i < modelFacturacion.getRowCount(); i++) {
-				        double subTotalFila = (double) modelFacturacion.getValueAt(i, 4);
-				        double itbisFila = (double) modelFacturacion.getValueAt(i, 5);
-				        double descuentoFila = (double) modelFacturacion.getValueAt(i, 6);
+				for (int i = 0; i < modelFacturacion.getRowCount(); i++) {
+					double subTotalFila = (double) modelFacturacion.getValueAt(i, 4);
+					double itbisFila = (double) modelFacturacion.getValueAt(i, 5);
+					double descuentoFila = (double) modelFacturacion.getValueAt(i, 6);
 
-				        subTotal += subTotalFila;
-				        totalItbis += itbisFila;
-				        totalDescuento += descuentoFila;
-				    }
+					subTotal += subTotalFila;
+					totalItbis += itbisFila;
+					totalDescuento += descuentoFila;
+				}
 
-				    // Redondear los valores a dos decimales
-				    subTotal = Double.parseDouble(df.format(subTotal));
-				    totalItbis = Double.parseDouble(df.format(totalItbis));
-				    totalDescuento = Double.parseDouble(df.format(totalDescuento));
-				    total = subTotal + totalItbis - totalDescuento;
+				// Redondear los valores a dos decimales
+				subTotal = Double.parseDouble(df.format(subTotal));
+				totalItbis = Double.parseDouble(df.format(totalItbis));
+				totalDescuento = Double.parseDouble(df.format(totalDescuento));
+				total = subTotal + totalItbis - totalDescuento;
 
-				    // Actualizar los JLabels con los nuevos valores
-				    lblSubTotal.setText("$" + subTotal);
-				    lblTotalItbis.setText("$" + totalItbis);
-				    lblTotalDescuento.setText("$" + totalDescuento);
-				    lblTotal.setText("" + total);
+				// Actualizar los JLabels con los nuevos valores
+				lblSubTotal.setText("$" + subTotal);
+				lblTotalItbis.setText("$" + totalItbis);
+				lblTotalDescuento.setText("$" + totalDescuento);
+				lblTotal.setText("" + total);
 			}
 		});
-		
+
 		checkCombo.addItemListener(new ItemListener() {
-		    @Override
-		    public void itemStateChanged(ItemEvent e) {
-		        // Verificar si el checkbox está seleccionado
-		        if (e.getStateChange() == ItemEvent.SELECTED) {
-		            // Obtener el número de filas en la tabla
-		            int rowCount = modelFacturacion.getRowCount();
-		            // Verificar si hay al menos tres filas
-		            if (rowCount >= 3 && rowCount <= 4 || rowCount >=7 && rowCount <= 8) {
-		                // Calcular el nuevo descuento del 5%
-		                double nuevoDescuento = 0.05; // 5%
-		                // Actualizar el descuento en el modelo de datos
-		                for (int i = 0; i < rowCount; i++) {
-		                    // Obtener el valor actual del descuento en la fila i
-		                    double descuentoActual = (double) modelFacturacion.getValueAt(i, 6);
-		                    // Calcular el nuevo descuento aplicando el 5% si no había otro descuento aplicado previamente
-		                    if (descuentoActual == 0) {
-		                    	DecimalFormat df = new DecimalFormat("#.##");
-		                    	 double subTotalActual = (double) modelFacturacion.getValueAt(i, 4);
-		                    	   
-		                    	    double nuevoDescuentoTotal = subTotalActual * nuevoDescuento;
-		                    	    
-		        
-		                    	    nuevoDescuentoTotal = Double.parseDouble(df.format(nuevoDescuentoTotal));
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				// Verificar si el checkbox está seleccionado
+				if (e.getStateChange() == ItemEvent.SELECTED) {
+					// Obtener el número de filas en la tabla
+					int rowCount = modelFacturacion.getRowCount();
+					// Verificar si hay al menos tres filas
+					if (rowCount >= 3 && rowCount <= 4 || rowCount >= 7 && rowCount <= 8) {
+						// Calcular el nuevo descuento del 5%
+						double nuevoDescuento = 0.05; // 5%
+						// Actualizar el descuento en el modelo de datos
+						for (int i = 0; i < rowCount; i++) {
+							// Obtener el valor actual del descuento en la fila i
+							double descuentoActual = (double) modelFacturacion.getValueAt(i, 6);
+							// Calcular el nuevo descuento aplicando el 5% si no había otro descuento
+							// aplicado previamente
+							if (descuentoActual == 0) {
+								DecimalFormat df = new DecimalFormat("#.##");
+								double subTotalActual = (double) modelFacturacion.getValueAt(i, 4);
 
-		                    	    modelFacturacion.setValueAt(nuevoDescuentoTotal, i, 6);
+								double nuevoDescuentoTotal = subTotalActual * nuevoDescuento;
 
-		                    	    double itbisActual = (double) modelFacturacion.getValueAt(i, 5);
-		                    	    double nuevoTotal = subTotalActual + itbisActual - nuevoDescuentoTotal;
+								nuevoDescuentoTotal = Double.parseDouble(df.format(nuevoDescuentoTotal));
 
-		                    	    nuevoTotal = Double.parseDouble(df.format(nuevoTotal));
+								modelFacturacion.setValueAt(nuevoDescuentoTotal, i, 6);
 
-		                    	    modelFacturacion.setValueAt(nuevoTotal, i, 7);
-		                    	    
-		                    	    calcularYActualizarTotal();
-		                    }
-		                }
-		                // Notificar a los oyentes que los datos de la tabla han cambiado
-		                modelFacturacion.fireTableDataChanged();
-		                
-		            }
-		        }
-		    }
-		    private void calcularYActualizarTotal() {
-				
-		    	 DecimalFormat df = new DecimalFormat("#.##");
+								double itbisActual = (double) modelFacturacion.getValueAt(i, 5);
+								double nuevoTotal = subTotalActual + itbisActual - nuevoDescuentoTotal;
 
-				    double subTotal = 0;
-				    double totalItbis = 0;
-				    double totalDescuento = 0;
-				    double total = 0;
+								nuevoTotal = Double.parseDouble(df.format(nuevoTotal));
 
-				    for (int i = 0; i < modelFacturacion.getRowCount(); i++) {
-				        double subTotalFila = (double) modelFacturacion.getValueAt(i, 4);
-				        double itbisFila = (double) modelFacturacion.getValueAt(i, 5);
-				        double descuentoFila = (double) modelFacturacion.getValueAt(i, 6);
+								modelFacturacion.setValueAt(nuevoTotal, i, 7);
 
-				        subTotal += subTotalFila;
-				        totalItbis += itbisFila;
-				        totalDescuento += descuentoFila;
-				    }
+								calcularYActualizarTotal();
+							}
+						}
+						// Notificar a los oyentes que los datos de la tabla han cambiado
+						modelFacturacion.fireTableDataChanged();
 
-				    // Redondear los valores a dos decimales
-				    subTotal = Double.parseDouble(df.format(subTotal));
-				    totalItbis = Double.parseDouble(df.format(totalItbis));
-				    totalDescuento = Double.parseDouble(df.format(totalDescuento));
-				    total = subTotal + totalItbis - totalDescuento;
-
-				    // Actualizar los JLabels con los nuevos valores
-				    lblSubTotal.setText("$" + subTotal);
-				    lblTotalItbis.setText("$" + totalItbis);
-				    lblTotalDescuento.setText("$" + totalDescuento);
-				    lblTotal.setText("$" + total);
-			}
-			
-		});	
-		checkCombo.addItemListener(new ItemListener() {
-		    @Override
-		    public void itemStateChanged(ItemEvent e) {
-		        // Verificar si el checkbox está desactivado
-		        if (e.getStateChange() == ItemEvent.DESELECTED) {
-		            // Actualizar el descuento y el total en la tabla
-		            actualizarDescuentoYTotal();
-		            calcularYActualizarTotal();
-		        }else {
-		        	calcularYActualizarTotal();
-		        }
-		    }
-			private void calcularYActualizarTotal() {
-				
-				 DecimalFormat df = new DecimalFormat("#.##");
-
-				    double subTotal = 0;
-				    double totalItbis = 0;
-				    double totalDescuento = 0;
-				    double total = 0;
-
-				    for (int i = 0; i < modelFacturacion.getRowCount(); i++) {
-				        double subTotalFila = (double) modelFacturacion.getValueAt(i, 4);
-				        double itbisFila = (double) modelFacturacion.getValueAt(i, 5);
-				        double descuentoFila = (double) modelFacturacion.getValueAt(i, 6);
-
-				        subTotal += subTotalFila;
-				        totalItbis += itbisFila;
-				        totalDescuento += descuentoFila;
-				    }
-
-				    // Redondear los valores a dos decimales
-				    subTotal = Double.parseDouble(df.format(subTotal));
-				    totalItbis = Double.parseDouble(df.format(totalItbis));
-				    totalDescuento = Double.parseDouble(df.format(totalDescuento));
-				    total = subTotal + totalItbis - totalDescuento;
-
-				    // Actualizar los JLabels con los nuevos valores
-				    lblSubTotal.setText("$" + subTotal);
-				    lblTotalItbis.setText("$" + totalItbis);
-				    lblTotalDescuento.setText("$" + totalDescuento);
-				    lblTotal.setText("$" + total);
+					}
 				}
-				
-			
+			}
+
+			private void calcularYActualizarTotal() {
+
+				DecimalFormat df = new DecimalFormat("#.##");
+
+				double subTotal = 0;
+				double totalItbis = 0;
+				double totalDescuento = 0;
+				double total = 0;
+
+				for (int i = 0; i < modelFacturacion.getRowCount(); i++) {
+					double subTotalFila = (double) modelFacturacion.getValueAt(i, 4);
+					double itbisFila = (double) modelFacturacion.getValueAt(i, 5);
+					double descuentoFila = (double) modelFacturacion.getValueAt(i, 6);
+
+					subTotal += subTotalFila;
+					totalItbis += itbisFila;
+					totalDescuento += descuentoFila;
+				}
+
+				// Redondear los valores a dos decimales
+				subTotal = Double.parseDouble(df.format(subTotal));
+				totalItbis = Double.parseDouble(df.format(totalItbis));
+				totalDescuento = Double.parseDouble(df.format(totalDescuento));
+				total = subTotal + totalItbis - totalDescuento;
+
+				// Actualizar los JLabels con los nuevos valores
+				lblSubTotal.setText("$" + subTotal);
+				lblTotalItbis.setText("$" + totalItbis);
+				lblTotalDescuento.setText("$" + totalDescuento);
+				lblTotal.setText("$" + total);
+			}
+
+		});
+		checkCombo.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				// Verificar si el checkbox está desactivado
+				if (e.getStateChange() == ItemEvent.DESELECTED) {
+					// Actualizar el descuento y el total en la tabla
+					actualizarDescuentoYTotal();
+					calcularYActualizarTotal();
+				} else {
+					calcularYActualizarTotal();
+				}
+			}
+
+			private void calcularYActualizarTotal() {
+
+				DecimalFormat df = new DecimalFormat("#.##");
+
+				double subTotal = 0;
+				double totalItbis = 0;
+				double totalDescuento = 0;
+				double total = 0;
+
+				for (int i = 0; i < modelFacturacion.getRowCount(); i++) {
+					double subTotalFila = (double) modelFacturacion.getValueAt(i, 4);
+					double itbisFila = (double) modelFacturacion.getValueAt(i, 5);
+					double descuentoFila = (double) modelFacturacion.getValueAt(i, 6);
+
+					subTotal += subTotalFila;
+					totalItbis += itbisFila;
+					totalDescuento += descuentoFila;
+				}
+
+				// Redondear los valores a dos decimales
+				subTotal = Double.parseDouble(df.format(subTotal));
+				totalItbis = Double.parseDouble(df.format(totalItbis));
+				totalDescuento = Double.parseDouble(df.format(totalDescuento));
+				total = subTotal + totalItbis - totalDescuento;
+
+				// Actualizar los JLabels con los nuevos valores
+				lblSubTotal.setText("$" + subTotal);
+				lblTotalItbis.setText("$" + totalItbis);
+				lblTotalDescuento.setText("$" + totalDescuento);
+				lblTotal.setText("$" + total);
+			}
+
 			// Método para actualizar el descuento y el total en la tabla
 			private void actualizarDescuentoYTotal() {
-			    DecimalFormat df = new DecimalFormat("#.##");
-			    for (int i = 0; i < modelFacturacion.getRowCount(); i++) {
-			        double subTotalActual = (double) modelFacturacion.getValueAt(i, 4);
-			        double itbisActual = (double) modelFacturacion.getValueAt(i, 5);
-			        
-			        double descuentoActual = (double) modelFacturacion.getValueAt(i, 6);
-			        double nuevoDescuentoTotal = 0;
+				DecimalFormat df = new DecimalFormat("#.##");
+				for (int i = 0; i < modelFacturacion.getRowCount(); i++) {
+					double subTotalActual = (double) modelFacturacion.getValueAt(i, 4);
+					double itbisActual = (double) modelFacturacion.getValueAt(i, 5);
 
-			        if (descuentoActual == 0 && checkCombo.isSelected()) {
-			            // Aplicar descuento del 5% si el checkbox está seleccionado
-			            nuevoDescuentoTotal = subTotalActual * 0.05;
-			        }
+					double descuentoActual = (double) modelFacturacion.getValueAt(i, 6);
+					double nuevoDescuentoTotal = 0;
 
-			        // Redondear el nuevo descuento a dos decimales
-			        nuevoDescuentoTotal = Double.parseDouble(df.format(nuevoDescuentoTotal));
+					if (descuentoActual == 0 && checkCombo.isSelected()) {
+						// Aplicar descuento del 5% si el checkbox está seleccionado
+						nuevoDescuentoTotal = subTotalActual * 0.05;
+					}
 
-			        // Actualizar el modelo de datos con el nuevo descuento
-			        modelFacturacion.setValueAt(nuevoDescuentoTotal, i, 6);
+					// Redondear el nuevo descuento a dos decimales
+					nuevoDescuentoTotal = Double.parseDouble(df.format(nuevoDescuentoTotal));
 
-			        // Calcular el nuevo total
-			        double nuevoTotal = subTotalActual + itbisActual - nuevoDescuentoTotal;
-			        // Redondear el nuevo total a dos decimales
-			        nuevoTotal = Double.parseDouble(df.format(nuevoTotal));
-			        // Actualizar el modelo de datos con el nuevo total
-			        modelFacturacion.setValueAt(nuevoTotal, i, 7);
-			    }
+					// Actualizar el modelo de datos con el nuevo descuento
+					modelFacturacion.setValueAt(nuevoDescuentoTotal, i, 6);
+
+					// Calcular el nuevo total
+					double nuevoTotal = subTotalActual + itbisActual - nuevoDescuentoTotal;
+					// Redondear el nuevo total a dos decimales
+					nuevoTotal = Double.parseDouble(df.format(nuevoTotal));
+					// Actualizar el modelo de datos con el nuevo total
+					modelFacturacion.setValueAt(nuevoTotal, i, 7);
+				}
 			}
 		});
-
-
 
 		btnAgregar.setForeground(Color.WHITE);
 		btnAgregar.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnAgregar.setBackground(new Color(0, 128, 255));
 		btnAgregar.setBounds(561, 270, 150, 29);
 		panel_16.add(btnAgregar);
-		
-		
-		
+
 		panel_16.add(cbProductos);
-		
-		
-		
-		
+
 		panel_16.add(cbTipos);
-		
+
 		JScrollPane scrollPane_2 = new JScrollPane();
 		scrollPane_2.setBounds(48, 343, 663, 199);
 		panel_16.add(scrollPane_2);
-		
+
 		tableFacturacion = new JTable();
 		modelFacturacion = new DefaultTableModel();
 		modelFacturacion.addColumn("Codigo");
@@ -2370,275 +2425,264 @@ public class Home extends JFrame {
 		modelFacturacion.addColumn("Descuento");
 		modelFacturacion.addColumn("Total");
 
-		
 		tableFacturacion = new JTable();
 		tableFacturacion.setModel(modelFacturacion);
-		
+
 		modelFacturacion.addTableModelListener(new TableModelListener() {
-		    @Override
-		    public void tableChanged(TableModelEvent e) {
-		        // Obtener el número de filas en la tabla
-		        int rowCount = modelFacturacion.getRowCount();
-		        
-		        
+			@Override
+			public void tableChanged(TableModelEvent e) {
+				// Obtener el número de filas en la tabla
+				int rowCount = modelFacturacion.getRowCount();
+
 				// Verificar si hay al menos tres filas
-		        if (rowCount >= 3) {
-		            // Activar el checkbox
-		            checkCombo.setEnabled(true);
-		        } else {
-		            // Desactivar el checkbox
-		            checkCombo.setEnabled(false);
-		        }
-		    }
+				if (rowCount >= 3) {
+					// Activar el checkbox
+					checkCombo.setEnabled(true);
+				} else {
+					// Desactivar el checkbox
+					checkCombo.setEnabled(false);
+				}
+			}
 		});
-		
-		
 
-
-		
 		scrollPane_2.setViewportView(tableFacturacion);
-		
+
 		JLabel lblNewLabel_7_1_1 = new JLabel("Cantidad memoria");
 		lblNewLabel_7_1_1.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblNewLabel_7_1_1.setBounds(48, 177, 124, 36);
 		panel_16.add(lblNewLabel_7_1_1);
-		
+
 		txtCantMemoria = new JTextField();
 		txtCantMemoria.setBackground(new Color(192, 192, 192));
 		txtCantMemoria.setEditable(false);
 		txtCantMemoria.setBounds(48, 211, 149, 25);
 		panel_16.add(txtCantMemoria);
 		txtCantMemoria.setColumns(10);
-		
+
 		txtCantidad = new JTextField();
 		txtCantidad.setBackground(new Color(192, 192, 192));
 		txtCantidad.setEditable(false);
 		txtCantidad.setColumns(10);
 		txtCantidad.setBounds(222, 273, 149, 25);
 		panel_16.add(txtCantidad);
-		
+
 		JLabel lblNewLabel_7_2 = new JLabel("Tipos de productos");
 		lblNewLabel_7_2.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lblNewLabel_7_2.setBounds(535, 22, 168, 36);
 		panel_16.add(lblNewLabel_7_2);
-		
+
 		JLabel lblNewLabel_7_1_1_1 = new JLabel("Marca");
 		lblNewLabel_7_1_1_1.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblNewLabel_7_1_1_1.setBounds(48, 118, 53, 36);
 		panel_16.add(lblNewLabel_7_1_1_1);
-		
+
 		JLabel lblNewLabel_7_1_1_2 = new JLabel("Tipo conexion");
 		lblNewLabel_7_1_1_2.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblNewLabel_7_1_1_2.setBounds(222, 118, 102, 36);
 		panel_16.add(lblNewLabel_7_1_1_2);
-		
+
 		JLabel lblNewLabel_7_1_1_3 = new JLabel("Modelo");
 		lblNewLabel_7_1_1_3.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblNewLabel_7_1_1_3.setBounds(397, 118, 53, 36);
 		panel_16.add(lblNewLabel_7_1_1_3);
-		
+
 		JLabel lblNewLabel_7_1_1_4 = new JLabel("Veloc procesamiento");
 		lblNewLabel_7_1_1_4.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblNewLabel_7_1_1_4.setBounds(561, 118, 150, 36);
 		panel_16.add(lblNewLabel_7_1_1_4);
-		
+
 		txtMarca = new JTextField();
 		txtMarca.setEditable(false);
 		txtMarca.setColumns(10);
 		txtMarca.setBackground(Color.LIGHT_GRAY);
 		txtMarca.setBounds(48, 152, 149, 25);
 		panel_16.add(txtMarca);
-		
+
 		txtTipoCone = new JTextField();
 		txtTipoCone.setEditable(false);
 		txtTipoCone.setColumns(10);
 		txtTipoCone.setBackground(Color.LIGHT_GRAY);
 		txtTipoCone.setBounds(222, 152, 149, 25);
 		panel_16.add(txtTipoCone);
-		
+
 		txtModelo = new JTextField();
 		txtModelo.setEditable(false);
 		txtModelo.setColumns(10);
 		txtModelo.setBackground(Color.LIGHT_GRAY);
 		txtModelo.setBounds(397, 154, 149, 25);
 		panel_16.add(txtModelo);
-		
+
 		JLabel lblNewLabel_7_1_1_2_1 = new JLabel("Tipo memoria");
 		lblNewLabel_7_1_1_2_1.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblNewLabel_7_1_1_2_1.setBounds(222, 177, 84, 36);
 		panel_16.add(lblNewLabel_7_1_1_2_1);
-		
+
 		txtTipoMemoria = new JTextField();
 		txtTipoMemoria.setEditable(false);
 		txtTipoMemoria.setColumns(10);
 		txtTipoMemoria.setBackground(Color.LIGHT_GRAY);
 		txtTipoMemoria.setBounds(222, 211, 149, 25);
 		panel_16.add(txtTipoMemoria);
-		
+
 		JLabel lblNewLabel_7_1_1_3_1 = new JLabel("Almacenamiento");
 		lblNewLabel_7_1_1_3_1.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblNewLabel_7_1_1_3_1.setBounds(397, 177, 110, 36);
 		panel_16.add(lblNewLabel_7_1_1_3_1);
-		
+
 		txtAlmacenamiento = new JTextField();
 		txtAlmacenamiento.setEditable(false);
 		txtAlmacenamiento.setColumns(10);
 		txtAlmacenamiento.setBackground(Color.LIGHT_GRAY);
 		txtAlmacenamiento.setBounds(397, 211, 149, 25);
 		panel_16.add(txtAlmacenamiento);
-		
+
 		JLabel lblNewLabel_7_1_1_4_1 = new JLabel("Tipo Ram");
 		lblNewLabel_7_1_1_4_1.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblNewLabel_7_1_1_4_1.setBounds(561, 177, 112, 36);
 		panel_16.add(lblNewLabel_7_1_1_4_1);
-		
+
 		JTextArea textArea = new JTextArea();
 		textArea.setBounds(655, 152, 5, 22);
 		panel_16.add(textArea);
-		
+
 		txtTipoRam = new JTextField();
 		txtTipoRam.setEditable(false);
 		txtTipoRam.setColumns(10);
 		txtTipoRam.setBackground(Color.LIGHT_GRAY);
 		txtTipoRam.setBounds(562, 211, 149, 25);
 		panel_16.add(txtTipoRam);
-		
+
 		txtPrecio = new JTextField();
 		txtPrecio.setEditable(false);
 		txtPrecio.setColumns(10);
 		txtPrecio.setBackground(Color.LIGHT_GRAY);
 		txtPrecio.setBounds(48, 273, 149, 25);
 		panel_16.add(txtPrecio);
-		
-		
+
 		checkCombo.setFont(new Font("Tahoma", Font.BOLD, 14));
 		checkCombo.setBackground(new Color(255, 255, 255));
 		checkCombo.setBounds(574, 305, 129, 23);
 		panel_16.add(checkCombo);
-		
+
 		txtVelocidad = new JTextField();
 		txtVelocidad.setEditable(false);
 		txtVelocidad.setColumns(10);
 		txtVelocidad.setBackground(Color.LIGHT_GRAY);
 		txtVelocidad.setBounds(561, 154, 149, 25);
 		panel_16.add(txtVelocidad);
-		
+
 		JLabel lblNewLabel_7_5 = new JLabel("Productos");
 		lblNewLabel_7_5.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lblNewLabel_7_5.setBounds(307, 22, 99, 36);
 		panel_16.add(lblNewLabel_7_5);
-		
-		
+
 		cbClientes.setBounds(58, 65, 224, 29);
 		panel_16.add(cbClientes);
-		
+
 		JLabel lblNewLabel_7_1_2 = new JLabel("Cantidad");
 		lblNewLabel_7_1_2.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblNewLabel_7_1_2.setBounds(397, 236, 129, 36);
 		panel_16.add(lblNewLabel_7_1_2);
-		
+
 		txtCantidadCompra = new JTextField();
 		txtCantidadCompra.setText("1");
 		txtCantidadCompra.setColumns(10);
 		txtCantidadCompra.setBackground(new Color(255, 255, 255));
 		txtCantidadCompra.setBounds(397, 273, 149, 25);
 		panel_16.add(txtCantidadCompra);
-		
+
 		JLabel lblNewLabel_7_1_1_1_1 = new JLabel("Total de la factura:");
 		lblNewLabel_7_1_1_1_1.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblNewLabel_7_1_1_1_1.setBounds(415, 549, 118, 36);
 		panel_16.add(lblNewLabel_7_1_1_1_1);
-		
-		
+
 		lblTotal.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblTotal.setBounds(535, 549, 65, 36);
 		panel_16.add(lblTotal);
-		
+
 		JLabel lblNewLabel_7_1_1_1_1_1 = new JLabel("Sub Total:");
 		lblNewLabel_7_1_1_1_1_1.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblNewLabel_7_1_1_1_1_1.setBounds(21, 549, 65, 36);
 		panel_16.add(lblNewLabel_7_1_1_1_1_1);
-		
-		
+
 		lblSubTotal.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblSubTotal.setBounds(88, 549, 53, 36);
 		panel_16.add(lblSubTotal);
-		
+
 		JLabel lblNewLabel_7_1_1_1_1_1_1 = new JLabel("Total ITBIS:");
 		lblNewLabel_7_1_1_1_1_1_1.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblNewLabel_7_1_1_1_1_1_1.setBounds(140, 549, 74, 36);
 		panel_16.add(lblNewLabel_7_1_1_1_1_1_1);
-		
-		
+
 		lblTotalItbis.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblTotalItbis.setBounds(212, 549, 45, 36);
 		panel_16.add(lblTotalItbis);
-		
+
 		JLabel lblNewLabel_7_1_1_1_1_2 = new JLabel("Total Descuento:");
 		lblNewLabel_7_1_1_1_1_2.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblNewLabel_7_1_1_1_1_2.setBounds(267, 549, 118, 36);
 		panel_16.add(lblNewLabel_7_1_1_1_1_2);
-		
-		
+
 		lblTotalDescuento.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblTotalDescuento.setBounds(372, 549, 45, 36);
 		panel_16.add(lblTotalDescuento);
-		
+
 		JButton btnEliminar = new JButton("Eliminar");
 		btnEliminar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				 int selectedRow = tableFacturacion.getSelectedRow();
+				int selectedRow = tableFacturacion.getSelectedRow();
 
-			        // Verificar si se seleccionó una fila
-			        if (selectedRow != -1) {
-			            // Eliminar la fila seleccionada del modelo de la tabla
-			            modelFacturacion.removeRow(selectedRow);
-			            calcularYActualizarTotal();
-			        } else {
-			            // Mostrar un mensaje indicando que no se ha seleccionado ninguna fila
-			            JOptionPane.showMessageDialog(null, "Por favor, seleccione una fila para eliminar.",
-			                    "Fila no seleccionada", JOptionPane.WARNING_MESSAGE);
-			        }
+				// Verificar si se seleccionó una fila
+				if (selectedRow != -1) {
+					// Eliminar la fila seleccionada del modelo de la tabla
+					modelFacturacion.removeRow(selectedRow);
+					calcularYActualizarTotal();
+				} else {
+					// Mostrar un mensaje indicando que no se ha seleccionado ninguna fila
+					JOptionPane.showMessageDialog(null, "Por favor, seleccione una fila para eliminar.",
+							"Fila no seleccionada", JOptionPane.WARNING_MESSAGE);
+				}
 			}
+
 			private void calcularYActualizarTotal() {
-				 DecimalFormat df = new DecimalFormat("#.##");
+				DecimalFormat df = new DecimalFormat("#.##");
 
-				    double subTotal = 0;
-				    double totalItbis = 0;
-				    double totalDescuento = 0;
-				    double total = 0;
+				double subTotal = 0;
+				double totalItbis = 0;
+				double totalDescuento = 0;
+				double total = 0;
 
-				    for (int i = 0; i < modelFacturacion.getRowCount(); i++) {
-				        double subTotalFila = (double) modelFacturacion.getValueAt(i, 4);
-				        double itbisFila = (double) modelFacturacion.getValueAt(i, 5);
-				        double descuentoFila = (double) modelFacturacion.getValueAt(i, 6);
+				for (int i = 0; i < modelFacturacion.getRowCount(); i++) {
+					double subTotalFila = (double) modelFacturacion.getValueAt(i, 4);
+					double itbisFila = (double) modelFacturacion.getValueAt(i, 5);
+					double descuentoFila = (double) modelFacturacion.getValueAt(i, 6);
 
-				        subTotal += subTotalFila;
-				        totalItbis += itbisFila;
-				        totalDescuento += descuentoFila;
-				    }
+					subTotal += subTotalFila;
+					totalItbis += itbisFila;
+					totalDescuento += descuentoFila;
+				}
 
-				    // Redondear los valores a dos decimales
-				    subTotal = Double.parseDouble(df.format(subTotal));
-				    totalItbis = Double.parseDouble(df.format(totalItbis));
-				    totalDescuento = Double.parseDouble(df.format(totalDescuento));
-				    total = subTotal + totalItbis - totalDescuento;
+				// Redondear los valores a dos decimales
+				subTotal = Double.parseDouble(df.format(subTotal));
+				totalItbis = Double.parseDouble(df.format(totalItbis));
+				totalDescuento = Double.parseDouble(df.format(totalDescuento));
+				total = subTotal + totalItbis - totalDescuento;
 
-				    // Actualizar los JLabels con los nuevos valores
-				    lblSubTotal.setText("$" + subTotal);
-				    lblTotalItbis.setText("$" + totalItbis);
-				    lblTotalDescuento.setText("$" + totalDescuento);
-				    lblTotal.setText("$" + total);
+				// Actualizar los JLabels con los nuevos valores
+				lblSubTotal.setText("$" + subTotal);
+				lblTotalItbis.setText("$" + totalItbis);
+				lblTotalDescuento.setText("$" + totalDescuento);
+				lblTotal.setText("$" + total);
 			}
 		});
 		tableFacturacion.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-		    public void valueChanged(ListSelectionEvent event) {
-		        // Verificar si hay alguna fila seleccionada en la tabla
-		        boolean filaSeleccionada = tableFacturacion.getSelectedRow() != -1;
+			public void valueChanged(ListSelectionEvent event) {
+				// Verificar si hay alguna fila seleccionada en la tabla
+				boolean filaSeleccionada = tableFacturacion.getSelectedRow() != -1;
 
-		        // Habilitar o deshabilitar el botón según si hay una fila seleccionada
-		        btnEliminar.setEnabled(filaSeleccionada);
-		    }
+				// Habilitar o deshabilitar el botón según si hay una fila seleccionada
+				btnEliminar.setEnabled(filaSeleccionada);
+			}
 		});
 		btnEliminar.setEnabled(false);
 		btnEliminar.setForeground(Color.WHITE);
@@ -2646,7 +2690,7 @@ public class Home extends JFrame {
 		btnEliminar.setBackground(new Color(255, 0, 0));
 		btnEliminar.setBounds(48, 309, 150, 29);
 		panel_16.add(btnEliminar);
-		
+
 		JLabel lblNewLabel_7_4 = new JLabel("Facturacion");
 		lblNewLabel_7_4.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lblNewLabel_7_4.setBounds(374, 22, 99, 36);
@@ -2660,7 +2704,7 @@ public class Home extends JFrame {
 				tabbedPane.setSelectedIndex(0);
 			}
 		});
-		
+
 		JButton btnFacturacion = new JButton("Facturacion");
 		btnFacturacion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -2776,8 +2820,6 @@ public class Home extends JFrame {
 		return cedula.matches("^\\d{11}$");
 	}
 
-
-	
 	// GLEUDY GOMEZ
 	public void eliminarFilaTabla() {
 		int fila = tableClientes.getSelectedRow();
@@ -2801,4 +2843,77 @@ public class Home extends JFrame {
 			}
 		}
 	}
+
+	// GLEUDY GOMEZ
+	// Pasar los datos a los campos
+	public void pasarDatosAFormulario(String[] rowData) {
+		// Asignar los datos a los campos del formulario
+		txtClienteCedula.setText(rowData[0]);
+		txtClienteNombre.setText(rowData[1]);
+		txtClienteTelefono.setText(rowData[2]);
+		txtClienteDireccion.setText(rowData[3]);
+		cbmTipocliente.setSelectedItem(rowData[4]);
+	}
+
+	// GLEUDY GOMEZ
+	public void guardarDatosFilaSeleccionada(DefaultTableModel model, JTable tableClientes) {
+		int selectedRowIndex = tableClientes.getSelectedRow();
+		if (selectedRowIndex != -1) {
+			int numColumns = model.getColumnCount();
+			String[] rowData = new String[numColumns];
+
+			for (int columnIndex = 0; columnIndex < numColumns; columnIndex++) {
+				rowData[columnIndex] = model.getValueAt(selectedRowIndex, columnIndex).toString();
+			}
+
+			// Pasar los datos a los campos del formulario
+			pasarDatosAFormulario(rowData);
+		} else {
+			// Mostrar un mensaje indicando que no se ha seleccionado ninguna fila
+			JOptionPane.showMessageDialog(null, "Por favor, seleccione una fila para guardar los datos.", "Error",
+					JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	public void actualizarDatosCliente() {
+		int fila = tableClientes.getSelectedRow();
+		if (fila != -1) {
+			DefaultTableModel model = (DefaultTableModel) tableClientes.getModel();
+
+			// Obtener los datos de los campos del formulario
+			String cedula = txtClienteCedula.getText();
+			String nombre = txtClienteNombre.getText();
+			String telefono = txtClienteTelefono.getText();
+			String direccion = txtClienteDireccion.getText();
+			String tipoCliente = cbmTipocliente.getSelectedItem().toString();
+
+			// Actualizar los datos en la fila seleccionada de la tabla
+			model.setValueAt(cedula, fila, 0);
+			model.setValueAt(nombre, fila, 1);
+			model.setValueAt(telefono, fila, 2);
+			model.setValueAt(direccion, fila, 3);
+			model.setValueAt(tipoCliente, fila, 4);
+
+			// Obtener la instancia de Guardar
+			Guardar guardar = Guardar.getInstance();
+
+			// Obtener la lista actual de clientes desde el archivo binario
+			ArrayList<Object> clientes = guardar.recuperarObjetos(guardar.getCliente());
+
+			// Verificar si la lista de clientes no es nula
+			if (clientes != null && fila < clientes.size()) {
+				// Actualizar el objeto correspondiente a la fila seleccionada en la lista
+				Cliente cliente = (Cliente) clientes.get(fila);
+				cliente.setCedula(cedula);
+				cliente.setNombre(nombre);
+				cliente.setTelefono(telefono);
+				cliente.setDireccion(direccion);
+				cliente.setTipoCliente(tipoCliente);
+
+				// Guardar la lista actualizada de clientes en el archivo binario
+				guardar.guardarObjetos(clientes, guardar.getCliente());
+			}
+		}
+	}
+
 }
